@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios e Auditorias - Sistema de Gestão</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Navegação lateral -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-user-shield"></i> Admin</h2>
+                <p>Portal Administrativo</p>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Principal</div>
+                    <a href="dashboard.html" class="nav-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Gestão</div>
+                    <a href="usuarios.html" class="nav-item">
+                        <i class="fas fa-users"></i>
+                        <span>Usuários</span>
+                    </a>
+                    <a href="escalas.html" class="nav-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Escalas</span>
+                    </a>
+                    <a href="incidentes.html" class="nav-item">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Incidentes</span>
+                    </a>
+                    <a href="relatorios.html" class="nav-item active">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Relatórios</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Sistema</div>
+                    <a href="#" class="nav-item">
+                        <i class="fas fa-cog"></i>
+                        <span>Configurações</span>
+                    </a>
+                    <a href="#" class="nav-item" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sair</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Conteúdo principal -->
+        <main class="main-content">
+            <div class="content-header">
+                <h1>Relatórios e Auditorias</h1>
+                <p>Gerar relatórios e visualizar logs do sistema</p>
+            </div>
+
+            <!-- Grid de Relatórios -->
+            <div class="grid grid-2">
+                <!-- Relatório de Incidentes -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Relatório de Incidentes
+                        </h3>
+                    </div>
+                    <p class="mb-3">Relatório detalhado de incidentes por período, tripulante, tipo e status</p>
+                    
+                    <div class="filters-grid mb-3">
+                        <div class="form-group">
+                            <label for="incidentStartDate">Data início</label>
+                            <input type="date" id="incidentStartDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="incidentEndDate">Data fim</label>
+                            <input type="date" id="incidentEndDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="incidentType">Tipo</label>
+                            <select id="incidentType">
+                                <option value="">Todos os tipos</option>
+                                <option value="Segurança">Segurança</option>
+                                <option value="Operacional">Operacional</option>
+                                <option value="Técnico">Técnico</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="incidentStatus">Status</label>
+                            <select id="incidentStatus">
+                                <option value="">Todos os status</option>
+                                <option value="Aberto">Aberto</option>
+                                <option value="Em Análise">Em Análise</option>
+                                <option value="Concluído">Concluído</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-primary btn-sm" onclick="generateReport('incidents')">
+                            <i class="fas fa-chart-bar"></i> Gerar
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="exportReport('incidents')">
+                            <i class="fas fa-download"></i> Exportar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Relatório de Escalas -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-calendar-alt"></i>
+                            Relatório de Escalas
+                        </h3>
+                    </div>
+                    <p class="mb-3">Relatório de escalas por período, tripulante e status de publicação</p>
+                    
+                    <div class="filters-grid mb-3">
+                        <div class="form-group">
+                            <label for="scaleStartDate">Data início</label>
+                            <input type="date" id="scaleStartDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="scaleEndDate">Data fim</label>
+                            <input type="date" id="scaleEndDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="scaleStatus">Status</label>
+                            <select id="scaleStatus">
+                                <option value="">Todos os status</option>
+                                <option value="Ativa">Ativa</option>
+                                <option value="Pendente">Pendente</option>
+                                <option value="Arquivada">Arquivada</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="scaleCrew">Tripulante</label>
+                            <select id="scaleCrew">
+                                <option value="">Todos os tripulantes</option>
+                                <option value="João Silva">João Silva</option>
+                                <option value="Maria Santos">Maria Santos</option>
+                                <option value="Pedro Costa">Pedro Costa</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-primary btn-sm" onclick="generateReport('scales')">
+                            <i class="fas fa-chart-bar"></i> Gerar
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="exportReport('scales')">
+                            <i class="fas fa-download"></i> Exportar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Relatório de Usuários -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-users"></i>
+                            Relatório de Usuários
+                        </h3>
+                    </div>
+                    <p class="mb-3">Relatório de usuários por perfil, status e atividade no sistema</p>
+                    
+                    <div class="filters-grid mb-3">
+                        <div class="form-group">
+                            <label for="userProfile">Perfil</label>
+                            <select id="userProfile">
+                                <option value="">Todos os perfis</option>
+                                <option value="Administrador">Administrador</option>
+                                <option value="Gestor">Gestor</option>
+                                <option value="Tripulante">Tripulante</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="userStatus">Status</label>
+                            <select id="userStatus">
+                                <option value="">Todos os status</option>
+                                <option value="Ativo">Ativo</option>
+                                <option value="Inativo">Inativo</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="userActivityStart">Atividade desde</label>
+                            <input type="date" id="userActivityStart">
+                        </div>
+                        <div class="form-group">
+                            <label for="userActivityEnd">Atividade até</label>
+                            <input type="date" id="userActivityEnd">
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-primary btn-sm" onclick="generateReport('users')">
+                            <i class="fas fa-chart-bar"></i> Gerar
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="exportReport('users')">
+                            <i class="fas fa-download"></i> Exportar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Relatório de Auditoria -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-shield-alt"></i>
+                            Relatório de Auditoria
+                        </h3>
+                    </div>
+                    <p class="mb-3">Log completo de acessos e alterações no sistema</p>
+                    
+                    <div class="filters-grid mb-3">
+                        <div class="form-group">
+                            <label for="auditStartDate">Data início</label>
+                            <input type="date" id="auditStartDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="auditEndDate">Data fim</label>
+                            <input type="date" id="auditEndDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="auditAction">Ação</label>
+                            <select id="auditAction">
+                                <option value="">Todas as ações</option>
+                                <option value="CREATE">Criação</option>
+                                <option value="UPDATE">Atualização</option>
+                                <option value="DELETE">Exclusão</option>
+                                <option value="LOGIN">Login</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="auditUser">Usuário</label>
+                            <select id="auditUser">
+                                <option value="">Todos os usuários</option>
+                                <option value="João Silva">João Silva</option>
+                                <option value="Maria Santos">Maria Santos</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-primary btn-sm" onclick="generateReport('audit')">
+                            <i class="fas fa-chart-bar"></i> Gerar
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="exportReport('audit')">
+                            <i class="fas fa-download"></i> Exportar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráficos e Estatísticas -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-chart-pie"></i>
+                        Estatísticas Gerais (Últimos 30 dias)
+                    </h3>
+                </div>
+                <div style="height: 300px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary);">
+                    <div class="text-center">
+                        <i class="fas fa-chart-pie" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <p>Gráfico de estatísticas gerais do sistema</p>
+                        <small>Dados dos últimos 30 dias</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Log de Auditoria -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-history"></i>
+                        Log de Auditoria - Últimas Atividades
+                    </h3>
+                </div>
+                
+                <div class="filters mb-3">
+                    <div class="filters-grid">
+                        <div class="form-group">
+                            <label for="auditSearch">Buscar</label>
+                            <input type="text" id="auditSearch" placeholder="Buscar por usuário ou ação..." onkeyup="filterAuditLog()">
+                        </div>
+                        <div class="form-group">
+                            <label for="auditTypeFilter">Tipo de ação</label>
+                            <select id="auditTypeFilter" onchange="filterAuditLog()">
+                                <option value="">Todas as ações</option>
+                                <option value="CREATE">Criação</option>
+                                <option value="UPDATE">Atualização</option>
+                                <option value="DELETE">Exclusão</option>
+                                <option value="LOGIN">Login</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="auditUserFilter">Usuário</label>
+                            <select id="auditUserFilter" onchange="filterAuditLog()">
+                                <option value="">Todos os usuários</option>
+                                <option value="João Silva">João Silva</option>
+                                <option value="Maria Santos">Maria Santos</option>
+                                <option value="Pedro Costa">Pedro Costa</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table" id="auditTable">
+                        <thead>
+                            <tr>
+                                <th>Data/Hora</th>
+                                <th>Usuário</th>
+                                <th>Ação</th>
+                                <th>Módulo</th>
+                                <th>Detalhes</th>
+                                <th>IP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>15/01/2024 15:30</td>
+                                <td>João Silva</td>
+                                <td><span class="status-badge status-warning">UPDATE</span></td>
+                                <td>Escalas</td>
+                                <td>Atualizou escala Janeiro 2024</td>
+                                <td>192.168.1.100</td>
+                            </tr>
+                            <tr>
+                                <td>15/01/2024 15:25</td>
+                                <td>Maria Santos</td>
+                                <td><span class="status-badge status-success">CREATE</span></td>
+                                <td>Incidentes</td>
+                                <td>Criou incidente #127</td>
+                                <td>192.168.1.101</td>
+                            </tr>
+                            <tr>
+                                <td>15/01/2024 15:20</td>
+                                <td>Pedro Costa</td>
+                                <td><span class="status-badge status-success">LOGIN</span></td>
+                                <td>Sistema</td>
+                                <td>Login no sistema</td>
+                                <td>192.168.1.102</td>
+                            </tr>
+                            <tr>
+                                <td>15/01/2024 15:15</td>
+                                <td>João Silva</td>
+                                <td><span class="status-badge status-error">DELETE</span></td>
+                                <td>Usuários</td>
+                                <td>Excluiu usuário inativo</td>
+                                <td>192.168.1.100</td>
+                            </tr>
+                            <tr>
+                                <td>15/01/2024 15:10</td>
+                                <td>Ana Oliveira</td>
+                                <td><span class="status-badge status-success">LOGIN</span></td>
+                                <td>Sistema</td>
+                                <td>Login no sistema</td>
+                                <td>192.168.1.103</td>
+                            </tr>
+                            <tr>
+                                <td>15/01/2024 15:05</td>
+                                <td>Maria Santos</td>
+                                <td><span class="status-badge status-warning">UPDATE</span></td>
+                                <td>Incidentes</td>
+                                <td>Atualizou status do incidente #124</td>
+                                <td>192.168.1.101</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../scripts/main.js"></script>
+    <script>
+        function generateReport(type) {
+            showMessage(`Gerando relatório de ${type}...`, 'info');
+            
+            setTimeout(() => {
+                showMessage(`Relatório de ${type} gerado com sucesso!`, 'success');
+            }, 2000);
+        }
+        
+        function exportReport(type) {
+            const format = prompt('Escolha o formato de exportação (PDF/Excel):', 'PDF');
+            if (format) {
+                showMessage(`Exportando relatório de ${type} em ${format}...`, 'info');
+                
+                setTimeout(() => {
+                    showMessage(`Relatório exportado com sucesso!`, 'success');
+                }, 2000);
+            }
+        }
+        
+        function filterAuditLog() {
+            const searchTerm = document.getElementById('auditSearch').value.toLowerCase();
+            const actionFilter = document.getElementById('auditTypeFilter').value;
+            const userFilter = document.getElementById('auditUserFilter').value;
+            
+            const table = document.getElementById('auditTable');
+            const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+            
+            for (let row of rows) {
+                const user = row.cells[1].textContent;
+                const action = row.cells[2].textContent;
+                const details = row.cells[4].textContent.toLowerCase();
+                
+                const matchesSearch = user.toLowerCase().includes(searchTerm) || 
+                                    details.includes(searchTerm);
+                const matchesAction = !actionFilter || action.includes(actionFilter);
+                const matchesUser = !userFilter || user.includes(userFilter);
+                
+                row.style.display = (matchesSearch && matchesAction && matchesUser) ? '' : 'none';
+            }
+        }
+        
+        // Inicializar datas padrão
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const thirtyDaysAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
+            
+            // Formatar datas para input type="date"
+            const formatDate = (date) => {
+                return date.toISOString().split('T')[0];
+            };
+            
+            // Definir datas padrão para os filtros
+            const dateInputs = document.querySelectorAll('input[type="date"]');
+            dateInputs.forEach((input, index) => {
+                if (index % 2 === 0) {
+                    input.value = formatDate(thirtyDaysAgo);
+                } else {
+                    input.value = formatDate(today);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

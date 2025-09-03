@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestão - Página Inicial</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Conteúdo principal -->
+        <main class="main-content">
+            <div class="content-header">
+                <h1>Bem-vindo ao Sistema de Gestão de Tripulação</h1>
+                <p>Escolha o portal de acesso para continuar</p>
+            </div>
+
+            <div class="grid grid-2">
+                <div class="card admin-card" onclick="window.location.href='admin/login.html'">
+                    <div class="card-icon">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <h2 class="card-title">Portal Administrativo</h2>
+                    <p>Acesso para administradores e gestores do sistema</p>
+                    <ul class="mb-3">
+                        <li><i class="fas fa-chart-line"></i> Dashboard</li>
+                        <li><i class="fas fa-users"></i> Gestão de Usuários</li>
+                        <li><i class="fas fa-calendar-alt"></i> Gestão de Escalas</li>
+                        <li><i class="fas fa-exclamation-triangle"></i> Gestão de Incidentes</li>
+                        <li><i class="fas fa-file-alt"></i> Relatórios</li>
+                    </ul>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Acessar Admin
+                    </button>
+                </div>
+
+                <div class="card tripulante-card" onclick="window.location.href='tripulante/login.html'">
+                    <div class="card-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h2 class="card-title">Portal do Tripulante</h2>
+                    <p>Acesso para tripulantes consultarem escalas e registrarem incidentes</p>
+                    <ul class="mb-3">
+                        <li><i class="fas fa-calendar-check"></i> Minha Escala</li>
+                        <li><i class="fas fa-plus-circle"></i> Registrar Incidente</li>
+                        <li><i class="fas fa-history"></i> Histórico Pessoal</li>
+                        <li><i class="fas fa-bell"></i> Notificações</li>
+                    </ul>
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Acessar Portal
+                    </button>
+                </div>
+            </div>
+
+            <!-- Informações adicionais -->
+            <div class="grid grid-3 mt-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-shield-alt"></i>
+                            Segurança
+                        </h3>
+                    </div>
+                    <p>Sistema com autenticação segura e controle de acesso baseado em perfis.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-history"></i>
+                            Histórico
+                        </h3>
+                    </div>
+                    <p>Controle completo de versões e histórico de alterações para rastreabilidade.</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-mobile-alt"></i>
+                            Responsivo
+                        </h3>
+                    </div>
+                    <p>Interface adaptável para desktop, tablet e dispositivos móveis.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="scripts/main.js"></script>
+</body>
+</html>

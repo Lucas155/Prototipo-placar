@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Usuários - Sistema de Gestão</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Estilos específicos para o formulário de tripulantes */
+        .tripulante-section {
+            display: none !important;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .tripulante-section.show {
+            display: block !important;
+        }
+        
+        .tripulante-section h4,
+        .tripulante-subsection h4 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .tripulante-subsection {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .tripulante-subsection:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #34495e;
+            font-size: 0.9rem;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .compliance-check {
+            background: #f8f9fa;
+            border-left: 4px solid #28a745;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .compliance-check.warning {
+            border-left-color: #ffc107;
+            background: #fff3cd;
+        }
+        
+        .compliance-check.danger {
+            border-left-color: #dc3545;
+            background: #f8d7da;
+        }
+        
+        .alert {
+            padding: 12px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-size: 0.9rem;
+        }
+        
+        .alert-info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .alert-danger {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .modal-content {
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .tripulante-toggle {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+        
+        .tripulante-toggle:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navegação lateral -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-user-shield"></i> Admin</h2>
+                <p>Portal Administrativo</p>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Principal</div>
+                    <a href="dashboard.html" class="nav-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Gestão</div>
+                    <a href="usuarios.html" class="nav-item active">
+                        <i class="fas fa-users"></i>
+                        <span>Usuários</span>
+                    </a>
+                    <a href="escalas.html" class="nav-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Escalas</span>
+                    </a>
+                    <a href="incidentes.html" class="nav-item">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Incidentes</span>
+                    </a>
+                    <a href="relatorios.html" class="nav-item">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Relatórios</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Sistema</div>
+                    <a href="#" class="nav-item">
+                        <i class="fas fa-cog"></i>
+                        <span>Configurações</span>
+                    </a>
+                    <a href="#" class="nav-item" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sair</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Conteúdo principal -->
+        <main class="main-content">
+            <div class="content-header">
+                <div class="d-flex justify-between align-center">
+                    <div>
+                        <h1>Gestão de Usuários</h1>
+                        <p>Gerenciar usuários do sistema</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="openModal('userModal')">
+                        <i class="fas fa-plus"></i>
+                        Novo Usuário
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filtros -->
+            <div class="filters">
+                <div class="filters-grid">
+                    <div class="form-group">
+                        <label for="searchUser">Buscar</label>
+                        <input type="text" id="searchUser" placeholder="Nome, email ou matrícula">
+                    </div>
+                    <div class="form-group">
+                        <label for="filterProfile">Perfil</label>
+                        <select id="filterProfile">
+                            <option value="">Todos os perfis</option>
+                            <option value="admin">Administrador</option>
+                            <option value="gestor">Gestor</option>
+                            <option value="tripulante">Tripulante</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filterStatus">Status</label>
+                        <select id="filterStatus">
+                            <option value="">Todos os status</option>
+                            <option value="ativo">Ativo</option>
+                            <option value="inativo">Inativo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>&nbsp;</label>
+                        <button class="btn btn-secondary" onclick="filterUsers()">
+                            <i class="fas fa-search"></i>
+                            Filtrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabela de usuários -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Lista de Usuários</h3>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-secondary btn-sm" onclick="exportData('users')">
+                            <i class="fas fa-download"></i>
+                            Exportar
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="printPage()">
+                            <i class="fas fa-print"></i>
+                            Imprimir
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Matrícula</th>
+                                <th>Perfil</th>
+                                <th>Status</th>
+                                <th>Último Acesso</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>João Silva</td>
+                                <td>joao.silva@empresa.com</td>
+                                <td>EMP001</td>
+                                <td>Administrador</td>
+                                <td><span class="status-badge status-active">Ativo</span></td>
+                                <td>Hoje, 14:30</td>
+                                <td>
+                                    <div class="d-flex gap-1">
+                                        <button class="btn btn-secondary btn-sm" onclick="editUser(1)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-secondary btn-sm" onclick="toggleUserStatus(1)">
+                                            <i class="fas fa-ban"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Maria Santos</td>
+                                <td>maria.santos@empresa.com</td>
+                                <td>EMP002</td>
+                                <td>Gestor</td>
+                                <td><span class="status-badge status-active">Ativo</span></td>
+                                <td>Ontem, 16:45</td>
+                                <td>
+                                    <div class="d-flex gap-1">
+                                        <button class="btn btn-secondary btn-sm" onclick="editUser(2)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-secondary btn-sm" onclick="toggleUserStatus(2)">
+                                            <i class="fas fa-ban"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Pedro Costa</td>
+                                <td>pedro.costa@empresa.com</td>
+                                <td>EMP003</td>
+                                <td>Tripulante</td>
+                                <td><span class="status-badge status-pending">Inativo</span></td>
+                                <td>2 dias atrás</td>
+                                <td>
+                                    <div class="d-flex gap-1">
+                                        <button class="btn btn-secondary btn-sm" onclick="editUser(3)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-secondary btn-sm" onclick="toggleUserStatus(3)">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Ana Oliveira</td>
+                                <td>ana.oliveira@empresa.com</td>
+                                <td>EMP004</td>
+                                <td>Tripulante</td>
+                                <td><span class="status-badge status-active">Ativo</span></td>
+                                <td>Hoje, 09:15</td>
+                                <td>
+                                    <div class="d-flex gap-1">
+                                        <button class="btn btn-secondary btn-sm" onclick="editUser(4)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-secondary btn-sm" onclick="toggleUserStatus(4)">
+                                            <i class="fas fa-ban"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal de usuário -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Novo Usuário</h3>
+                <button class="modal-close" onclick="closeModal('userModal')">&times;</button>
+            </div>
+            <form id="userForm" onsubmit="saveUser(event)">
+                <!-- Informações Básicas do Usuário -->
+                <div class="grid grid-2">
+                    <div class="form-group">
+                        <label for="userName">Nome Completo *</label>
+                        <input type="text" id="userName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userEmail">Email *</label>
+                        <input type="email" id="userEmail" required>
+                    </div>
+                </div>
+                <div class="grid grid-2">
+                    <div class="form-group">
+                        <label for="userMatricula">Matrícula *</label>
+                        <input type="text" id="userMatricula" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userProfile">Perfil *</label>
+                        <select id="userProfile" required onchange="toggleTripulanteFields(); console.log('onchange chamado');">
+                            <option value="">Selecione um perfil</option>
+                            <option value="admin">Administrador</option>
+                            <option value="gestor">Gestor</option>
+                            <option value="tripulante">Tripulante</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-2">
+                    <div class="form-group">
+                        <label for="userPassword">Senha *</label>
+                        <input type="password" id="userPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userPasswordConfirm">Confirmar Senha *</label>
+                        <input type="password" id="userPasswordConfirm" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="userStatus">Status</label>
+                    <select id="userStatus">
+                        <option value="ativo">Ativo</option>
+                        <option value="inativo">Inativo</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="userObservations">Observações</label>
+                    <textarea id="userObservations" rows="3"></textarea>
+                </div>
+
+                <!-- Seções específicas para Tripulantes -->
+                <div id="tripulanteFields" class="tripulante-section">
+                    <!-- 1. Informações Pessoais -->
+                    <div class="tripulante-subsection">
+                        <h4><i class="fas fa-user"></i> Informações Pessoais</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cpf">CPF *</label>
+                                <input type="text" id="cpf" name="cpf" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="rg">RG</label>
+                                <input type="text" id="rg" name="rg">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="nascimento">Data de Nascimento *</label>
+                                <input type="date" id="nascimento" name="nascimento" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="nacionalidade">Nacionalidade *</label>
+                                <input type="text" id="nacionalidade" name="nacionalidade" value="Brasileira" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="telefone">Telefone *</label>
+                                <input type="tel" id="telefone" name="telefone" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="endereco">Endereço</label>
+                                <input type="text" id="endereco" name="endereco">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Dados Profissionais -->
+                    <div class="tripulante-subsection">
+                        <h4><i class="fas fa-briefcase"></i> Dados Profissionais</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cargo">Cargo/Função *</label>
+                                <select id="cargo" name="cargo" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="comandante">Comandante</option>
+                                    <option value="copiloto">Copiloto</option>
+                                    <option value="comissario">Comissário</option>
+                                    <option value="mecanico">Mecânico de Voo</option>
+                                    <option value="navegador">Navegador</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="base">Base de Lotação *</label>
+                                <input type="text" id="base" name="base" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="admissao">Data de Admissão *</label>
+                                <input type="date" id="admissao" name="admissao" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="jornada">Jornada de Trabalho *</label>
+                                <select id="jornada" name="jornada" required onchange="verificarConformidade()">
+                                    <option value="">Selecione...</option>
+                                    <option value="disponivel">Disponível</option>
+                                    <option value="restricao">Restrição</option>
+                                    <option value="folga">Escala de Folga</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Licenças e Habilitações -->
+                    <div class="tripulante-subsection">
+                        <h4><i class="fas fa-certificate"></i> Licenças e Habilitações</h4>
+                        
+                        <div id="licencasContainer">
+                            <div class="licenca-item">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="tipoLicenca_0">Tipo de Licença *</label>
+                                        <select id="tipoLicenca_0" name="tipoLicenca[]" required>
+                                            <option value="">Selecione...</option>
+                                            <option value="CIV">CIV - Comercial</option>
+                                            <option value="CHT">CHT - Helicóptero</option>
+                                            <option value="CPL">CPL - Piloto Privado</option>
+                                            <option value="ATPL">ATPL - Transporte de Linha</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="numeroLicenca_0">Número da Licença *</label>
+                                        <input type="text" id="numeroLicenca_0" name="numeroLicenca[]" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="categorias_0">Categorias/Habilitações</label>
+                                        <input type="text" id="categorias_0" name="categorias[]" placeholder="Ex: PLA, PPH, INVA">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="validadeLicenca_0">Validade da Licença *</label>
+                                        <input type="date" id="validadeLicenca_0" name="validadeLicenca[]" required onchange="verificarConformidade()">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group mt-2">
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="adicionarLicenca()">
+                                <i class="fas fa-plus"></i> Adicionar Outra Licença
+                            </button>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="icaoNivel">ICAO Inglês - Nível *</label>
+                                <select id="icaoNivel" name="icaoNivel" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="1">Nível 1</option>
+                                    <option value="2">Nível 2</option>
+                                    <option value="3">Nível 3</option>
+                                    <option value="4">Nível 4</option>
+                                    <option value="5">Nível 5</option>
+                                    <option value="6">Nível 6</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="icaoValidade">ICAO Inglês - Validade *</label>
+                                <input type="date" id="icaoValidade" name="icaoValidade" required onchange="verificarConformidade()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. Treinamentos -->
+                    <div class="tripulante-subsection">
+                        <h4><i class="fas fa-graduation-cap"></i> Treinamentos</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="treinamentoSimulador">Simulador - Data</label>
+                                <input type="date" id="treinamentoSimulador" name="treinamentoSimulador">
+                            </div>
+                            <div class="form-group">
+                                <label for="treinamentoSimuladorValidade">Simulador - Validade</label>
+                                <input type="date" id="treinamentoSimuladorValidade" name="treinamentoSimuladorValidade">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="treinamentoCRM">CRM - Data</label>
+                                <input type="date" id="treinamentoCRM" name="treinamentoCRM">
+                            </div>
+                            <div class="form-group">
+                                <label for="treinamentoCRMValidade">CRM - Validade</label>
+                                <input type="date" id="treinamentoCRMValidade" name="treinamentoCRMValidade">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="treinamentoEmergencia">Emergência - Data</label>
+                                <input type="date" id="treinamentoEmergencia" name="treinamentoEmergencia">
+                            </div>
+                            <div class="form-group">
+                                <label for="treinamentoEmergenciaValidade">Emergência - Validade</label>
+                                <input type="date" id="treinamentoEmergenciaValidade" name="treinamentoEmergenciaValidade">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 5. Experiência Recente -->
+                    <div class="tripulante-subsection">
+                        <h4><i class="fas fa-clock"></i> Experiência Recente</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="ultimoVoo">Último Voo</label>
+                                <input type="date" id="ultimoVoo" name="ultimoVoo" onchange="verificarConformidade()">
+                            </div>
+                            <div class="form-group">
+                                <label for="totalHoras">Total de Horas de Voo</label>
+                                <input type="number" id="totalHoras" name="totalHoras" min="0" step="0.1">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="horas90dias">Últimas 90 dias (horas)</label>
+                                <input type="number" id="horas90dias" name="horas90dias" min="0" step="0.1" onchange="verificarConformidade()">
+                            </div>
+                            <div class="form-group">
+                                <label for="horas12meses">Últimos 12 meses (horas)</label>
+                                <input type="number" id="horas12meses" name="horas12meses" min="0" step="0.1">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 6. Documentação -->
+                    <div class="tripulante-subsection">
+                        <h4><i class="fas fa-passport"></i> Documentação</h4>
+                        
+                        <!-- Passaporte -->
+                        <div class="documento-item">
+                            <h5><i class="fas fa-passport"></i> Passaporte</h5>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="passaporte">Número</label>
+                                    <input type="text" id="passaporte" name="passaporte">
+                                </div>
+                                <div class="form-group">
+                                    <label for="passaporteValidade">Validade</label>
+                                    <input type="date" id="passaporteValidade" name="passaporteValidade">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="passaporteAnexo">Anexar Passaporte</label>
+                                <input type="file" id="passaporteAnexo" name="passaporteAnexo" accept=".pdf,.jpg,.jpeg,.png">
+                                <small class="form-text">Formatos aceitos: PDF, JPG, PNG (máx. 5MB)</small>
+                            </div>
+                        </div>
+
+                        <!-- Vistos -->
+                        <div class="documento-item">
+                            <h5><i class="fas fa-stamp"></i> Vistos</h5>
+                            
+                            <div id="vistosContainer">
+                                <div class="visto-item">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="paisVisto_0">País do Visto *</label>
+                                            <select id="paisVisto_0" name="paisVisto[]" required>
+                                                <option value="">Selecione o país...</option>
+                                                <option value="AF">Afeganistão</option>
+                                                <option value="ZA">África do Sul</option>
+                                                <option value="AL">Albânia</option>
+                                                <option value="DE">Alemanha</option>
+                                                <option value="AD">Andorra</option>
+                                                <option value="AO">Angola</option>
+                                                <option value="AI">Anguilla</option>
+                                                <option value="AQ">Antártida</option>
+                                                <option value="AG">Antígua e Barbuda</option>
+                                                <option value="SA">Arábia Saudita</option>
+                                                <option value="DZ">Argélia</option>
+                                                <option value="AR">Argentina</option>
+                                                <option value="AM">Armênia</option>
+                                                <option value="AW">Aruba</option>
+                                                <option value="AU">Austrália</option>
+                                                <option value="AT">Áustria</option>
+                                                <option value="AZ">Azerbaijão</option>
+                                                <option value="BS">Bahamas</option>
+                                                <option value="BH">Bahrein</option>
+                                                <option value="BD">Bangladesh</option>
+                                                <option value="BB">Barbados</option>
+                                                <option value="BE">Bélgica</option>
+                                                <option value="BZ">Belize</option>
+                                                <option value="BJ">Benin</option>
+                                                <option value="BM">Bermudas</option>
+                                                <option value="BY">Bielorrússia</option>
+                                                <option value="BO">Bolívia</option>
+                                                <option value="BA">Bósnia e Herzegovina</option>
+                                                <option value="BW">Botswana</option>
+                                                <option value="BR">Brasil</option>
+                                                <option value="BN">Brunei</option>
+                                                <option value="BG">Bulgária</option>
+                                                <option value="BF">Burkina Faso</option>
+                                                <option value="BI">Burundi</option>
+                                                <option value="BT">Butão</option>
+                                                <option value="CV">Cabo Verde</option>
+                                                <option value="KH">Camboja</option>
+                                                <option value="CM">Camarões</option>
+                                                <option value="CA">Canadá</option>
+                                                <option value="QA">Catar</option>
+                                                <option value="KZ">Cazaquistão</option>
+                                                <option value="TD">Chade</option>
+                                                <option value="CL">Chile</option>
+                                                <option value="CN">China</option>
+                                                <option value="CY">Chipre</option>
+                                                <option value="SG">Cingapura</option>
+                                                <option value="CO">Colômbia</option>
+                                                <option value="KM">Comores</option>
+                                                <option value="CG">Congo</option>
+                                                <option value="CD">Congo (RDC)</option>
+                                                <option value="KP">Coreia do Norte</option>
+                                                <option value="KR">Coreia do Sul</option>
+                                                <option value="CI">Costa do Marfim</option>
+                                                <option value="CR">Costa Rica</option>
+                                                <option value="HR">Croácia</option>
+                                                <option value="CU">Cuba</option>
+                                                <option value="CW">Curaçao</option>
+                                                <option value="DK">Dinamarca</option>
+                                                <option value="DJ">Djibouti</option>
+                                                <option value="DM">Dominica</option>
+                                                <option value="EG">Egito</option>
+                                                <option value="SV">El Salvador</option>
+                                                <option value="AE">Emirados Árabes Unidos</option>
+                                                <option value="EC">Equador</option>
+                                                <option value="ER">Eritreia</option>
+                                                <option value="SK">Eslováquia</option>
+                                                <option value="SI">Eslovênia</option>
+                                                <option value="ES">Espanha</option>
+                                                <option value="US">Estados Unidos</option>
+                                                <option value="EE">Estônia</option>
+                                                <option value="ET">Etiópia</option>
+                                                <option value="FJ">Fiji</option>
+                                                <option value="PH">Filipinas</option>
+                                                <option value="FI">Finlândia</option>
+                                                <option value="FR">França</option>
+                                                <option value="GA">Gabão</option>
+                                                <option value="GM">Gâmbia</option>
+                                                <option value="GH">Gana</option>
+                                                <option value="GE">Geórgia</option>
+                                                <option value="GI">Gibraltar</option>
+                                                <option value="GD">Granada</option>
+                                                <option value="GR">Grécia</option>
+                                                <option value="GL">Groenlândia</option>
+                                                <option value="GP">Guadalupe</option>
+                                                <option value="GU">Guam</option>
+                                                <option value="GT">Guatemala</option>
+                                                <option value="GG">Guernsey</option>
+                                                <option value="GY">Guiana</option>
+                                                <option value="GF">Guiana Francesa</option>
+                                                <option value="GN">Guiné</option>
+                                                <option value="GQ">Guiné Equatorial</option>
+                                                <option value="GW">Guiné-Bissau</option>
+                                                <option value="HT">Haiti</option>
+                                                <option value="NL">Holanda</option>
+                                                <option value="HN">Honduras</option>
+                                                <option value="HK">Hong Kong</option>
+                                                <option value="HU">Hungria</option>
+                                                <option value="YE">Iêmen</option>
+                                                <option value="BV">Ilha Bouvet</option>
+                                                <option value="IM">Ilha de Man</option>
+                                                <option value="CX">Ilha do Natal</option>
+                                                <option value="NF">Ilha Norfolk</option>
+                                                <option value="AX">Ilhas Aland</option>
+                                                <option value="KY">Ilhas Cayman</option>
+                                                <option value="CC">Ilhas Cocos</option>
+                                                <option value="CK">Ilhas Cook</option>
+                                                <option value="FO">Ilhas Faroe</option>
+                                                <option value="GS">Ilhas Geórgia do Sul e Sandwich do Sul</option>
+                                                <option value="HM">Ilhas Heard e McDonald</option>
+                                                <option value="FK">Ilhas Malvinas</option>
+                                                <option value="MP">Ilhas Marianas do Norte</option>
+                                                <option value="MH">Ilhas Marshall</option>
+                                                <option value="UM">Ilhas Menores dos Estados Unidos</option>
+                                                <option value="PN">Ilhas Pitcairn</option>
+                                                <option value="SB">Ilhas Salomão</option>
+                                                <option value="TC">Ilhas Turks e Caicos</option>
+                                                <option value="VI">Ilhas Virgens Americanas</option>
+                                                <option value="VG">Ilhas Virgens Britânicas</option>
+                                                <option value="IN">Índia</option>
+                                                <option value="ID">Indonésia</option>
+                                                <option value="IR">Irã</option>
+                                                <option value="IQ">Iraque</option>
+                                                <option value="IE">Irlanda</option>
+                                                <option value="IS">Islândia</option>
+                                                <option value="IL">Israel</option>
+                                                <option value="IT">Itália</option>
+                                                <option value="JM">Jamaica</option>
+                                                <option value="JP">Japão</option>
+                                                <option value="JE">Jersey</option>
+                                                <option value="JO">Jordânia</option>
+                                                <option value="KW">Kuwait</option>
+                                                <option value="LA">Laos</option>
+                                                <option value="LS">Lesoto</option>
+                                                <option value="LV">Letônia</option>
+                                                <option value="LB">Líbano</option>
+                                                <option value="LR">Libéria</option>
+                                                <option value="LY">Líbia</option>
+                                                <option value="LI">Liechtenstein</option>
+                                                <option value="LT">Lituânia</option>
+                                                <option value="LU">Luxemburgo</option>
+                                                <option value="MO">Macau</option>
+                                                <option value="MK">Macedônia do Norte</option>
+                                                <option value="MG">Madagascar</option>
+                                                <option value="MY">Malásia</option>
+                                                <option value="MW">Malawi</option>
+                                                <option value="MV">Maldivas</option>
+                                                <option value="ML">Mali</option>
+                                                <option value="MT">Malta</option>
+                                                <option value="MA">Marrocos</option>
+                                                <option value="MQ">Martinica</option>
+                                                <option value="MU">Maurício</option>
+                                                <option value="MR">Mauritânia</option>
+                                                <option value="YT">Mayotte</option>
+                                                <option value="MX">México</option>
+                                                <option value="FM">Micronésia</option>
+                                                <option value="MZ">Moçambique</option>
+                                                <option value="MD">Moldávia</option>
+                                                <option value="MC">Mônaco</option>
+                                                <option value="MN">Mongólia</option>
+                                                <option value="ME">Montenegro</option>
+                                                <option value="MS">Montserrat</option>
+                                                <option value="MM">Myanmar</option>
+                                                <option value="NA">Namíbia</option>
+                                                <option value="NR">Nauru</option>
+                                                <option value="NP">Nepal</option>
+                                                <option value="NI">Nicarágua</option>
+                                                <option value="NE">Níger</option>
+                                                <option value="NG">Nigéria</option>
+                                                <option value="NU">Niue</option>
+                                                <option value="NO">Noruega</option>
+                                                <option value="NC">Nova Caledônia</option>
+                                                <option value="NZ">Nova Zelândia</option>
+                                                <option value="OM">Omã</option>
+                                                <option value="BQ">Países Baixos Caribenhos</option>
+                                                <option value="PW">Palau</option>
+                                                <option value="PA">Panamá</option>
+                                                <option value="PG">Papua-Nova Guiné</option>
+                                                <option value="PK">Paquistão</option>
+                                                <option value="PY">Paraguai</option>
+                                                <option value="PE">Peru</option>
+                                                <option value="PF">Polinésia Francesa</option>
+                                                <option value="PL">Polônia</option>
+                                                <option value="PR">Porto Rico</option>
+                                                <option value="PT">Portugal</option>
+                                                <option value="KE">Quênia</option>
+                                                <option value="KG">Quirguistão</option>
+                                                <option value="KI">Quiribati</option>
+                                                <option value="GB">Reino Unido</option>
+                                                <option value="CF">República Centro-Africana</option>
+                                                <option value="DO">República Dominicana</option>
+                                                <option value="RE">Reunião</option>
+                                                <option value="RO">Romênia</option>
+                                                <option value="RW">Ruanda</option>
+                                                <option value="RU">Rússia</option>
+                                                <option value="EH">Saara Ocidental</option>
+                                                <option value="PM">Saint Pierre e Miquelon</option>
+                                                <option value="WS">Samoa</option>
+                                                <option value="AS">Samoa Americana</option>
+                                                <option value="SM">San Marino</option>
+                                                <option value="SH">Santa Helena</option>
+                                                <option value="LC">Santa Lúcia</option>
+                                                <option value="BL">São Bartolomeu</option>
+                                                <option value="KN">São Cristóvão e Névis</option>
+                                                <option value="MF">São Martinho</option>
+                                                <option value="VA">São Marino</option>
+                                                <option value="ST">São Tomé e Príncipe</option>
+                                                <option value="VC">São Vicente e Granadinas</option>
+                                                <option value="SC">Seicheles</option>
+                                                <option value="SN">Senegal</option>
+                                                <option value="SL">Serra Leoa</option>
+                                                <option value="RS">Sérvia</option>
+                                                <option value="SX">Sint Maarten</option>
+                                                <option value="SO">Somália</option>
+                                                <option value="LK">Sri Lanka</option>
+                                                <option value="SZ">Suazilândia</option>
+                                                <option value="SD">Sudão</option>
+                                                <option value="SS">Sudão do Sul</option>
+                                                <option value="SE">Suécia</option>
+                                                <option value="CH">Suíça</option>
+                                                <option value="SR">Suriname</option>
+                                                <option value="TH">Tailândia</option>
+                                                <option value="TW">Taiwan</option>
+                                                <option value="TJ">Tajiquistão</option>
+                                                <option value="TZ">Tanzânia</option>
+                                                <option value="TF">Terras Austrais Francesas</option>
+                                                <option value="IO">Território Britânico do Oceano Índico</option>
+                                                <option value="PS">Território Palestino</option>
+                                                <option value="TL">Timor-Leste</option>
+                                                <option value="TG">Togo</option>
+                                                <option value="TK">Tokelau</option>
+                                                <option value="TO">Tonga</option>
+                                                <option value="TT">Trinidad e Tobago</option>
+                                                <option value="TN">Tunísia</option>
+                                                <option value="TM">Turcomenistão</option>
+                                                <option value="TR">Turquia</option>
+                                                <option value="TV">Tuvalu</option>
+                                                <option value="UA">Ucrânia</option>
+                                                <option value="UG">Uganda</option>
+                                                <option value="UY">Uruguai</option>
+                                                <option value="UZ">Uzbequistão</option>
+                                                <option value="VU">Vanuatu</option>
+                                                <option value="VE">Venezuela</option>
+                                                <option value="VN">Vietnã</option>
+                                                <option value="WF">Wallis e Futuna</option>
+                                                <option value="ZM">Zâmbia</option>
+                                                <option value="ZW">Zimbábue</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="visto_0">Número</label>
+                                            <input type="text" id="visto_0" name="visto[]">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="vistoValidade_0">Validade</label>
+                                            <input type="date" id="vistoValidade_0" name="vistoValidade[]">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="tipoVisto_0">Tipo de Visto</label>
+                                            <select id="tipoVisto_0" name="tipoVisto[]">
+                                                <option value="">Selecione...</option>
+                                                <option value="turismo">Turismo</option>
+                                                <option value="negocios">Negócios</option>
+                                                <option value="trabalho">Trabalho</option>
+                                                <option value="estudo">Estudo</option>
+                                                <option value="transito">Trânsito</option>
+                                                <option value="diplomatico">Diplomático</option>
+                                                <option value="outro">Outro</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="vistoAnexo_0">Anexar Visto</label>
+                                        <input type="file" id="vistoAnexo_0" name="vistoAnexo[]" accept=".pdf,.jpg,.jpeg,.png">
+                                        <small class="form-text">Formatos aceitos: PDF, JPG, PNG (máx. 5MB)</small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group mt-2">
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="adicionarVisto()">
+                                    <i class="fas fa-plus"></i> Adicionar Outro Visto
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- CMA -->
+                        <div class="documento-item">
+                            <h5><i class="fas fa-heartbeat"></i> CMA - Certificado Médico Aeronáutico</h5>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="cma">Data de Emissão</label>
+                                    <input type="date" id="cma" name="cma">
+                                </div>
+                                <div class="form-group">
+                                    <label for="cmaValidade">Validade</label>
+                                    <input type="date" id="cmaValidade" name="cmaValidade" onchange="verificarConformidade()">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="cmaAnexo">Anexar CMA</label>
+                                <input type="file" id="cmaAnexo" name="cmaAnexo" accept=".pdf,.jpg,.jpeg,.png">
+                                <small class="form-text">Formatos aceitos: PDF, JPG, PNG (máx. 5MB)</small>
+                            </div>
+                        </div>
+
+                        <!-- Outros Documentos -->
+                        <div class="documento-item">
+                            <h5><i class="fas fa-file-alt"></i> Outros Documentos</h5>
+                            <div class="form-group">
+                                <label for="outrosDocumentos">Descrição dos Documentos</label>
+                                <textarea id="outrosDocumentos" name="outrosDocumentos" rows="2" placeholder="Descreva outros documentos importantes..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="outrosDocumentosAnexo">Anexar Documentos</label>
+                                <input type="file" id="outrosDocumentosAnexo" name="outrosDocumentosAnexo[]" multiple accept=".pdf,.jpg,.jpeg,.png">
+                                <small class="form-text">Formatos aceitos: PDF, JPG, PNG (máx. 5MB cada)</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 7. Vacinas Obrigatórias -->
+                    <div class="tripulante-subsection">
+                        <h4><i class="fas fa-syringe"></i> Vacinas Obrigatórias</h4>
+                        
+                        <div id="vacinasContainer">
+                            <div class="vacina-item">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="tipoVacina_0">Tipo de Vacina *</label>
+                                        <select id="tipoVacina_0" name="tipoVacina[]" required>
+                                            <option value="">Selecione...</option>
+                                            <option value="febre_amarela">Febre Amarela</option>
+                                            <option value="hepatite_a">Hepatite A</option>
+                                            <option value="hepatite_b">Hepatite B</option>
+                                            <option value="meningite">Meningite</option>
+                                            <option value="tetanos">Tétano</option>
+                                            <option value="difteria">Difteria</option>
+                                            <option value="sarampo">Sarampo</option>
+                                            <option value="covid19">COVID-19</option>
+                                            <option value="outra">Outra</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="dataVacina_0">Data da Vacina *</label>
+                                        <input type="date" id="dataVacina_0" name="dataVacina[]" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="validadeVacina_0">Validade da Vacina *</label>
+                                    <input type="date" id="validadeVacina[]" name="validadeVacina[]" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group mt-2">
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="adicionarVacina()">
+                                <i class="fas fa-plus"></i> Adicionar Outra Vacina
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 8. Check de Conformidade para Escala -->
+                    <div class="tripulante-subsection">
+                        <h4><i class="fas fa-check-circle"></i> Check de Conformidade para Escala</h4>
+                        <p class="text-muted">Esta seção é preenchida automaticamente pelo sistema baseado nos dados cadastrados acima.</p>
+                        
+                        <div id="complianceChecks">
+                            <div class="compliance-check">
+                                <i class="fas fa-clock"></i> <strong>Jornada disponível:</strong> <span id="checkJornada">Verificando...</span>
+                            </div>
+                            <div class="compliance-check">
+                                <i class="fas fa-certificate"></i> <strong>Licenças em dia:</strong> <span id="checkLicencas">Verificando...</span>
+                            </div>
+                            <div class="compliance-check">
+                                <i class="fas fa-graduation-cap"></i> <strong>Treinamentos válidos:</strong> <span id="checkTreinamentos">Verificando...</span>
+                            </div>
+                            <div class="compliance-check">
+                                <i class="fas fa-clock"></i> <strong>Experiência recente:</strong> <span id="checkExperiencia">Verificando...</span>
+                            </div>
+                            <div class="compliance-check">
+                                <i class="fas fa-passport"></i> <strong>Documentação válida:</strong> <span id="checkDocumentacao">Verificando...</span>
+                            </div>
+                        </div>
+                        
+                        <div id="complianceStatus" class="mt-3">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i>
+                                <strong>Status de Conformidade:</strong> <span id="statusConformidade">Aguardando verificação...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 9. Histórico -->
+                    <div class="tripulante-subsection">
+                        <h4><i class="fas fa-history"></i> Histórico</h4>
+                        <div class="form-group">
+                            <label for="observacoesTripulante">Observações e Histórico</label>
+                            <textarea id="observacoesTripulante" name="observacoesTripulante" rows="4" placeholder="Registre aqui informações sobre escalas, incidentes, alterações no cadastro, etc."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-between mt-3">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('userModal')">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        Salvar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../scripts/main.js"></script>
+    <script src="../scripts/tripulante-validation.js"></script>
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('show');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+            document.getElementById('userForm').reset();
+            // Esconder campos de tripulante ao fechar
+            document.getElementById('tripulanteFields').classList.remove('show');
+        }
+
+        function toggleTripulanteFields() {
+            const profile = document.getElementById('userProfile').value;
+            const tripulanteFields = document.getElementById('tripulanteFields');
+            
+            console.log('Perfil selecionado:', profile);
+            console.log('Elemento tripulanteFields:', tripulanteFields);
+            
+            if (profile === 'tripulante') {
+                tripulanteFields.style.display = 'block';
+                tripulanteFields.classList.add('show');
+                console.log('Mostrando campos de tripulante');
+                // Fazer campos obrigatórios para tripulantes
+                makeTripulanteFieldsRequired(true);
+            } else {
+                tripulanteFields.style.display = 'none';
+                tripulanteFields.classList.remove('show');
+                console.log('Ocultando campos de tripulante');
+                // Remover obrigatoriedade dos campos de tripulante
+                makeTripulanteFieldsRequired(false);
+            }
+        }
+
+        function makeTripulanteFieldsRequired(required) {
+            const tripulanteInputs = document.querySelectorAll('#tripulanteFields input, #tripulanteFields select, #tripulanteFields textarea');
+            tripulanteInputs.forEach(input => {
+                // Campos que NÃO são obrigatórios mesmo para tripulantes
+                if (input.id !== 'rg' && input.id !== 'endereco' && 
+                    input.id !== 'passaporte' && input.id !== 'outrosDocumentos' && 
+                    input.id !== 'observacoesTripulante' &&
+                    !input.name.includes('passaporteAnexo') &&
+                    !input.name.includes('vistoAnexo') && !input.name.includes('cmaAnexo') &&
+                    !input.name.includes('outrosDocumentosAnexo') &&
+                    !input.name.includes('visto[]') && !input.name.includes('vistoValidade[]') &&
+                    !input.name.includes('tipoVisto[]')) {
+                    input.required = required;
+                }
+            });
+        }
+
+        function verificarConformidade() {
+            if (typeof verificarConformidadeTempoReal === 'function') {
+                verificarConformidadeTempoReal();
+            } else {
+                verificarConformidadeFallback();
+            }
+        }
+
+        function verificarConformidadeFallback() {
+            console.log('Usando verificação de conformidade básica...');
+            
+            // Verificar jornada
+            const jornada = document.getElementById('jornada')?.value;
+            const checkJornada = document.getElementById('checkJornada');
+            if (checkJornada) {
+                if (jornada === 'disponivel') {
+                    checkJornada.innerHTML = '<span style="color: #27ae60;">✓ Disponível</span>';
+                } else if (jornada) {
+                    checkJornada.innerHTML = '<span style="color: #e74c3c;">✗ Não disponível</span>';
+                }
+            }
+
+            // Verificar licenças
+            const licencas = document.querySelectorAll('#licencasContainer .licenca-item');
+            const checkLicencas = document.getElementById('checkLicencas');
+            if (checkLicencas) {
+                let todasValidas = true;
+                let licencasVencidas = 0;
+                
+                licencas.forEach(licenca => {
+                    const validade = licenca.querySelector('input[name="validadeLicenca[]"]')?.value;
+                    if (validade) {
+                        const hoje = new Date();
+                        const validadeDate = new Date(validade);
+                        if (validadeDate <= hoje) {
+                            todasValidas = false;
+                            licencasVencidas++;
+                        }
+                    } else {
+                        todasValidas = false;
+                    }
+                });
+                
+                if (todasValidas) {
+                    checkLicencas.innerHTML = '<span style="color: #27ae60;">✓ Todas válidas</span>';
+                } else {
+                    checkLicencas.innerHTML = `<span style="color: #e74c3c;">✗ ${licencasVencidas} licença(s) vencida(s)</span>`;
+                }
+            }
+
+            // Verificar ICAO
+            const validadeICAO = document.getElementById('icaoValidade')?.value;
+            const checkDocumentacao = document.getElementById('checkDocumentacao');
+            if (checkDocumentacao && validadeICAO) {
+                const hoje = new Date();
+                const validade = new Date(validadeICAO);
+                if (validade > hoje) {
+                    checkDocumentacao.innerHTML = '<span style="color: #27ae60;">✓ Válida</span>';
+                } else {
+                    checkDocumentacao.innerHTML = '<span style="color: #e74c3c;">✗ Vencida</span>';
+                }
+            }
+
+            // Verificar experiência recente
+            const ultimoVoo = document.getElementById('ultimoVoo')?.value;
+            const checkExperiencia = document.getElementById('checkExperiencia');
+            if (checkExperiencia && ultimoVoo) {
+                const hoje = new Date();
+                const ultimoVooDate = new Date(ultimoVoo);
+                const noventaDiasAtras = new Date();
+                noventaDiasAtras.setDate(noventaDiasAtras.getDate() - 90);
+                
+                if (ultimoVooDate > noventaDiasAtras) {
+                    checkExperiencia.innerHTML = '<span style="color: #27ae60;">✓ Em dia</span>';
+                } else {
+                    checkExperiencia.innerHTML = '<span style="color: #e74c3c;">✗ Necessita voo recente</span>';
+                }
+            }
+
+            // Verificar treinamentos
+            const checkTreinamentos = document.getElementById('checkTreinamentos');
+            if (checkTreinamentos) {
+                checkTreinamentos.innerHTML = '<span style="color: #27ae60;">✓ Verificar manualmente</span>';
+            }
+        }
+
+        // Função para adicionar nova licença
+        function adicionarLicenca() {
+            const licencasContainer = document.getElementById('licencasContainer');
+            const licencaItem = document.querySelector('#licencasContainer .licenca-item:last-child');
+            const newIndex = licencasContainer.children.length;
+
+            const newLicencaItem = licencaItem.cloneNode(true);
+            
+            // Remover botões de remover existentes para evitar duplicação
+            const existingButtons = newLicencaItem.querySelectorAll('.btn-outline-danger');
+            existingButtons.forEach(button => button.remove());
+            
+            // Atualizar IDs e names dos campos
+            const tipoSelect = newLicencaItem.querySelector('select[name="tipoLicenca[]"]');
+            const numeroInput = newLicencaItem.querySelector('input[name="numeroLicenca[]"]');
+            const categoriasInput = newLicencaItem.querySelector('input[name="categorias[]"]');
+            const validadeInput = newLicencaItem.querySelector('input[name="validadeLicenca[]"]');
+            
+            tipoSelect.id = `tipoLicenca_${newIndex}`;
+            numeroInput.id = `numeroLicenca_${newIndex}`;
+            categoriasInput.id = `categorias_${newIndex}`;
+            validadeInput.id = `validadeLicenca_${newIndex}`;
+            
+            // Limpar valores
+            tipoSelect.value = '';
+            numeroInput.value = '';
+            categoriasInput.value = '';
+            validadeInput.value = '';
+            
+            // Adicionar botão de remover
+            const removeButton = document.createElement('button');
+            removeButton.type = 'button';
+            removeButton.className = 'btn btn-outline-danger btn-sm mt-2';
+            removeButton.innerHTML = '<i class="fas fa-trash"></i> Remover Licença';
+            removeButton.onclick = function() { removerLicenca(newIndex); };
+            
+            newLicencaItem.appendChild(removeButton);
+            licencasContainer.appendChild(newLicencaItem);
+        }
+
+        // Função para remover licença
+        function removerLicenca(index) {
+            const licencasContainer = document.getElementById('licencasContainer');
+            const licencas = Array.from(licencasContainer.children);
+            if (licencas.length > 1) {
+                licencas[index].remove();
+                // Reindexar nomes dos inputs para evitar conflitos
+                licencas.forEach((licenca, i) => {
+                    const tipoSelect = licenca.querySelector('select[name="tipoLicenca[]"]');
+                    const numeroInput = licenca.querySelector('input[name="numeroLicenca[]"]');
+                    const categoriasInput = licenca.querySelector('input[name="categorias[]"]');
+                    const validadeInput = licenca.querySelector('input[name="validadeLicenca[]"]');
+                    
+                    if (tipoSelect) {
+                        tipoSelect.id = `tipoLicenca_${i}`;
+                        numeroInput.id = `numeroLicenca_${i}`;
+                        categoriasInput.id = `categorias_${i}`;
+                        validadeInput.id = `validadeLicenca_${i}`;
+                    }
+                });
+                verificarConformidade(); // Recalcular conformidade após remover
+            }
+        }
+
+        // Função para adicionar nova vacina
+        function adicionarVacina() {
+            const vacinasContainer = document.getElementById('vacinasContainer');
+            const vacinaItem = document.querySelector('#vacinasContainer .vacina-item:last-child');
+            const newIndex = vacinasContainer.children.length;
+
+            const newVacinaItem = vacinaItem.cloneNode(true);
+            
+            // Remover botões de remover existentes para evitar duplicação
+            const existingButtons = newVacinaItem.querySelectorAll('.btn-outline-danger');
+            existingButtons.forEach(button => button.remove());
+            
+            // Atualizar IDs e names dos campos
+            const tipoSelect = newVacinaItem.querySelector('select[name="tipoVacina[]"]');
+            const dataInput = newVacinaItem.querySelector('input[name="dataVacina[]"]');
+            const validadeInput = newVacinaItem.querySelector('input[name="validadeVacina[]"]');
+            
+            tipoSelect.id = `tipoVacina_${newIndex}`;
+            dataInput.id = `dataVacina_${newIndex}`;
+            validadeInput.id = `validadeVacina_${newIndex}`;
+            
+            // Limpar valores
+            tipoSelect.value = '';
+            dataInput.value = '';
+            validadeInput.value = '';
+            
+            // Adicionar botão de remover
+            const removeButton = document.createElement('button');
+            removeButton.type = 'button';
+            removeButton.className = 'btn btn-outline-danger btn-sm mt-2';
+            removeButton.innerHTML = '<i class="fas fa-trash"></i> Remover Vacina';
+            removeButton.onclick = function() { removerVacina(newIndex); };
+            
+            newVacinaItem.appendChild(removeButton);
+            vacinasContainer.appendChild(newVacinaItem);
+        }
+
+        // Função para remover vacina
+        function removerVacina(index) {
+            const vacinasContainer = document.getElementById('vacinasContainer');
+            const vacinas = Array.from(vacinasContainer.children);
+            if (vacinas.length > 1) {
+                vacinas[index].remove();
+                // Reindexar nomes dos inputs para evitar conflitos
+                vacinas.forEach((vacina, i) => {
+                    const tipoSelect = vacina.querySelector('select[name="tipoVacina[]"]');
+                    const dataInput = vacina.querySelector('input[name="dataVacina[]"]');
+                    const validadeInput = vacina.querySelector('input[name="validadeVacina[]"]');
+                    
+                    if (tipoSelect) {
+                        tipoSelect.id = `tipoVacina_${i}`;
+                        dataInput.id = `dataVacina_${i}`;
+                        validadeInput.id = `validadeVacina_${i}`;
+                    }
+                });
+            }
+        }
+
+        // Função para adicionar novo visto
+        function adicionarVisto() {
+            const vistosContainer = document.getElementById('vistosContainer');
+            const vistoItem = document.querySelector('#vistosContainer .visto-item:last-child');
+            const newIndex = vistosContainer.children.length;
+
+            const newVistoItem = vistoItem.cloneNode(true);
+            
+            // Remover botões de remover existentes para evitar duplicação
+            const existingButtons = newVistoItem.querySelectorAll('.btn-outline-danger');
+            existingButtons.forEach(button => button.remove());
+            
+            // Atualizar IDs e names dos campos
+            const paisSelect = newVistoItem.querySelector('select[name="paisVisto[]"]');
+            const numeroInput = newVistoItem.querySelector('input[name="visto[]"]');
+            const validadeInput = newVistoItem.querySelector('input[name="vistoValidade[]"]');
+            const tipoSelect = newVistoItem.querySelector('select[name="tipoVisto[]"]');
+            const anexoInput = newVistoItem.querySelector('input[name="vistoAnexo[]"]');
+            
+            paisSelect.id = `paisVisto_${newIndex}`;
+            numeroInput.id = `visto_${newIndex}`;
+            validadeInput.id = `vistoValidade_${newIndex}`;
+            tipoSelect.id = `tipoVisto_${newIndex}`;
+            anexoInput.id = `vistoAnexo_${newIndex}`;
+            
+            // Limpar valores
+            paisSelect.value = '';
+            numeroInput.value = '';
+            validadeInput.value = '';
+            tipoSelect.value = '';
+            anexoInput.value = '';
+            
+            // Adicionar botão de remover
+            const removeButton = document.createElement('button');
+            removeButton.type = 'button';
+            removeButton.className = 'btn btn-outline-danger btn-sm mt-2';
+            removeButton.innerHTML = '<i class="fas fa-trash"></i> Remover Visto';
+            removeButton.onclick = function() { removerVisto(newIndex); };
+            
+            newVistoItem.appendChild(removeButton);
+            vistosContainer.appendChild(newVistoItem);
+        }
+
+        // Função para remover visto
+        function removerVisto(index) {
+            const vistosContainer = document.getElementById('vistosContainer');
+            const vistos = Array.from(vistosContainer.children);
+            if (vistos.length > 1) {
+                vistos[index].remove();
+                // Reindexar nomes dos inputs para evitar conflitos
+                vistos.forEach((visto, i) => {
+                    const paisSelect = visto.querySelector('select[name="paisVisto[]"]');
+                    const numeroInput = visto.querySelector('input[name="visto[]"]');
+                    const validadeInput = visto.querySelector('input[name="vistoValidade[]"]');
+                    const tipoSelect = visto.querySelector('select[name="tipoVisto[]"]');
+                    const anexoInput = visto.querySelector('input[name="vistoAnexo[]"]');
+                    
+                    if (numeroInput) {
+                        paisSelect.id = `paisVisto_${i}`;
+                        numeroInput.id = `visto_${i}`;
+                        validadeInput.id = `vistoValidade_${i}`;
+                        tipoSelect.id = `tipoVisto_${i}`;
+                        anexoInput.id = `vistoAnexo_${i}`;
+                    }
+                });
+            }
+        }
+
+        function editUser(userId) {
+            // Simular carregamento de dados do usuário
+            document.getElementById('modalTitle').textContent = 'Editar Usuário';
+            document.getElementById('userName').value = 'João Silva';
+            document.getElementById('userEmail').value = 'joao.silva@empresa.com';
+            document.getElementById('userMatricula').value = 'EMP001';
+            document.getElementById('userProfile').value = 'admin';
+            document.getElementById('userStatus').value = 'ativo';
+            document.getElementById('userPassword').required = false;
+            document.getElementById('userPasswordConfirm').required = false;
+            
+            // Verificar se é tripulante para mostrar campos adicionais
+            toggleTripulanteFields();
+            
+            openModal('userModal');
+        }
+
+        function saveUser(event) {
+            event.preventDefault();
+            
+            const profile = document.getElementById('userProfile').value;
+            
+            if (profile === 'tripulante') {
+                // Verificar conformidade antes de salvar tripulante
+                verificarConformidade();
+                showMessage('Tripulante salvo com sucesso!', 'success');
+            } else {
+                showMessage('Usuário salvo com sucesso!', 'success');
+            }
+            
+            closeModal('userModal');
+        }
+
+        function toggleUserStatus(userId) {
+            // Simular alteração de status
+            showMessage('Status do usuário alterado!', 'success');
+        }
+
+        function filterUsers() {
+            // Simular filtro
+            showMessage('Filtros aplicados!', 'success');
+        }
+        
+        // Teste inicial para verificar se a função está funcionando
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Página carregada, testando função toggleTripulanteFields...');
+            console.log('Função existe?', typeof toggleTripulanteFields);
+            
+            // Testar se o elemento existe
+            const tripulanteFields = document.getElementById('tripulanteFields');
+            console.log('Elemento tripulanteFields encontrado:', tripulanteFields);
+            
+            if (tripulanteFields) {
+                console.log('Estado inicial:', tripulanteFields.style.display);
+                console.log('Classes:', tripulanteFields.className);
+            }
+        });
+    </script>
+</body>
+</html>

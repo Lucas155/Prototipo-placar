@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico Pessoal - Sistema de Gestão</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Navegação lateral -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-user"></i> Tripulante</h2>
+                <p>Portal do Tripulante</p>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Principal</div>
+                    <a href="dashboard.html" class="nav-item">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Funcionalidades</div>
+                    <a href="escala.html" class="nav-item">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>Minha Escala</span>
+                    </a>
+                    <a href="incidente.html" class="nav-item">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Registrar Incidente</span>
+                    </a>
+                    <a href="historico.html" class="nav-item active">
+                        <i class="fas fa-history"></i>
+                        <span>Histórico Pessoal</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Sistema</div>
+                    <a href="#" class="nav-item">
+                        <i class="fas fa-bell"></i>
+                        <span>Notificações</span>
+                    </a>
+                    <a href="#" class="nav-item" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sair</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Conteúdo principal -->
+        <main class="main-content">
+            <div class="content-header">
+                <div class="d-flex justify-between align-center">
+                    <div>
+                        <h1>Histórico Pessoal</h1>
+                        <p>Acompanhe seu histórico de incidentes e escalas</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-secondary btn-sm" onclick="exportData('history')">
+                            <i class="fas fa-download"></i>
+                            Exportar
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="printPage()">
+                            <i class="fas fa-print"></i>
+                            Imprimir
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filtros -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-filter"></i>
+                        Filtros
+                    </h3>
+                </div>
+                <div class="filters-grid">
+                    <div class="form-group">
+                        <label for="historyType">Tipo</label>
+                        <select id="historyType" onchange="filterHistory()">
+                            <option value="">Todos os tipos</option>
+                            <option value="incident">Incidentes</option>
+                            <option value="scale">Escalas</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="historyStatus">Status</label>
+                        <select id="historyStatus" onchange="filterHistory()">
+                            <option value="">Todos os status</option>
+                            <option value="active">Ativo</option>
+                            <option value="completed">Concluído</option>
+                            <option value="pending">Pendente</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="historyStartDate">Data início</label>
+                        <input type="date" id="historyStartDate" onchange="filterHistory()">
+                    </div>
+                    <div class="form-group">
+                        <label for="historyEndDate">Data fim</label>
+                        <input type="date" id="historyEndDate" onchange="filterHistory()">
+                    </div>
+                    <div class="form-group">
+                        <label for="historySearch">Buscar</label>
+                        <input type="text" id="historySearch" placeholder="Buscar por título ou descrição..." onkeyup="filterHistory()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Estatísticas -->
+            <div class="grid grid-4 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Total de Incidentes
+                        </h4>
+                    </div>
+                    <div class="text-center">
+                        <h2 style="color: var(--primary-500); margin: 0;">12</h2>
+                        <small class="text-secondary">Últimos 12 meses</small>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">
+                            <i class="fas fa-calendar-check"></i>
+                            Escalas Ativas
+                        </h4>
+                    </div>
+                    <div class="text-center">
+                        <h2 style="color: var(--success-500); margin: 0;">3</h2>
+                        <small class="text-secondary">Escalas em andamento</small>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">
+                            <i class="fas fa-clock"></i>
+                            Horas Trabalhadas
+                        </h4>
+                    </div>
+                    <div class="text-center">
+                        <h2 style="color: var(--warning-500); margin: 0;">1,248</h2>
+                        <small class="text-secondary">Últimos 12 meses</small>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">
+                            <i class="fas fa-plane"></i>
+                            Voos Realizados
+                        </h4>
+                    </div>
+                    <div class="text-center">
+                        <h2 style="color: var(--primary-500); margin: 0;">156</h2>
+                        <small class="text-secondary">Últimos 12 meses</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Histórico de Incidentes -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Histórico de Incidentes
+                    </h3>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table" id="incidentsTable">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Título</th>
+                                <th>Tipo</th>
+                                <th>Severidade</th>
+                                <th>Status</th>
+                                <th>Voo</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-type="incident" data-status="pending">
+                                <td>15/01/2024</td>
+                                <td>Problema com equipamento de segurança</td>
+                                <td>Segurança</td>
+                                <td><span class="status-badge status-warning">Média</span></td>
+                                <td><span class="status-badge status-warning">Em Análise</span></td>
+                                <td>AZ1234</td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm" onclick="viewIncidentDetails(1)">
+                                        <i class="fas fa-eye"></i>
+                                        Ver
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr data-type="incident" data-status="completed">
+                                <td>12/01/2024</td>
+                                <td>Atraso na decolagem por condições climáticas</td>
+                                <td>Climático</td>
+                                <td><span class="status-badge status-success">Baixa</span></td>
+                                <td><span class="status-badge status-success">Concluído</span></td>
+                                <td>AZ1235</td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm" onclick="viewIncidentDetails(2)">
+                                        <i class="fas fa-eye"></i>
+                                        Ver
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr data-type="incident" data-status="completed">
+                                <td>08/01/2024</td>
+                                <td>Falha técnica no sistema de comunicação</td>
+                                <td>Técnico</td>
+                                <td><span class="status-badge status-error">Alta</span></td>
+                                <td><span class="status-badge status-success">Concluído</span></td>
+                                <td>AZ1236</td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm" onclick="viewIncidentDetails(3)">
+                                        <i class="fas fa-eye"></i>
+                                        Ver
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr data-type="incident" data-status="completed">
+                                <td>05/01/2024</td>
+                                <td>Problema operacional durante procedimento de pouso</td>
+                                <td>Operacional</td>
+                                <td><span class="status-badge status-warning">Média</span></td>
+                                <td><span class="status-badge status-success">Concluído</span></td>
+                                <td>AZ1237</td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm" onclick="viewIncidentDetails(4)">
+                                        <i class="fas fa-eye"></i>
+                                        Ver
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Histórico de Escalas -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-calendar-alt"></i>
+                        Histórico de Escalas
+                    </h3>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table" id="scalesTable">
+                        <thead>
+                            <tr>
+                                <th>Período</th>
+                                <th>Versão</th>
+                                <th>Status</th>
+                                <th>Dias Trabalhados</th>
+                                <th>Horas Totais</th>
+                                <th>Última Atualização</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-type="scale" data-status="active">
+                                <td>Janeiro 2024</td>
+                                <td><span class="status-badge status-success">2.1</span></td>
+                                <td><span class="status-badge status-success">Ativa</span></td>
+                                <td>22 dias</td>
+                                <td>176 horas</td>
+                                <td>15/01/2024 14:30</td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm" onclick="viewScaleDetails('jan2024')">
+                                        <i class="fas fa-eye"></i>
+                                        Ver
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr data-type="scale" data-status="completed">
+                                <td>Dezembro 2023</td>
+                                <td><span class="status-badge status-success">3.0</span></td>
+                                <td><span class="status-badge status-success">Concluída</span></td>
+                                <td>20 dias</td>
+                                <td>160 horas</td>
+                                <td>31/12/2023 23:59</td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm" onclick="viewScaleDetails('dez2023')">
+                                        <i class="fas fa-eye"></i>
+                                        Ver
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr data-type="scale" data-status="completed">
+                                <td>Novembro 2023</td>
+                                <td><span class="status-badge status-success">2.5</span></td>
+                                <td><span class="status-badge status-success">Concluída</span></td>
+                                <td>18 dias</td>
+                                <td>144 horas</td>
+                                <td>30/11/2023 23:59</td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm" onclick="viewScaleDetails('nov2023')">
+                                        <i class="fas fa-eye"></i>
+                                        Ver
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr data-type="scale" data-status="completed">
+                                <td>Outubro 2023</td>
+                                <td><span class="status-badge status-success">1.8</span></td>
+                                <td><span class="status-badge status-success">Concluída</span></td>
+                                <td>21 dias</td>
+                                <td>168 horas</td>
+                                <td>31/10/2023 23:59</td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm" onclick="viewScaleDetails('out2023')">
+                                        <i class="fas fa-eye"></i>
+                                        Ver
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal de Detalhes do Incidente -->
+    <div id="incidentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Detalhes do Incidente</h3>
+                <button class="modal-close" onclick="closeModal('incidentModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="incidentModalBody">
+                <!-- Conteúdo será carregado dinamicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Detalhes da Escala -->
+    <div id="scaleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Detalhes da Escala</h3>
+                <button class="modal-close" onclick="closeModal('scaleModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="scaleModalBody">
+                <!-- Conteúdo será carregado dinamicamente -->
+            </div>
+        </div>
+    </div>
+
+    <script src="../scripts/main.js"></script>
+    <script>
+        function filterHistory() {
+            const typeFilter = document.getElementById('historyType').value;
+            const statusFilter = document.getElementById('historyStatus').value;
+            const searchTerm = document.getElementById('historySearch').value.toLowerCase();
+            const startDate = document.getElementById('historyStartDate').value;
+            const endDate = document.getElementById('historyEndDate').value;
+            
+            // Filtrar tabela de incidentes
+            const incidentRows = document.querySelectorAll('#incidentsTable tbody tr');
+            incidentRows.forEach(row => {
+                const type = row.getAttribute('data-type');
+                const status = row.getAttribute('data-status');
+                const title = row.cells[1].textContent.toLowerCase();
+                const date = row.cells[0].textContent;
+                
+                const matchesType = !typeFilter || type === typeFilter;
+                const matchesStatus = !statusFilter || status === statusFilter;
+                const matchesSearch = !searchTerm || title.includes(searchTerm);
+                const matchesDate = !startDate || !endDate || (date >= startDate && date <= endDate);
+                
+                row.style.display = (matchesType && matchesStatus && matchesSearch && matchesDate) ? '' : 'none';
+            });
+            
+            // Filtrar tabela de escalas
+            const scaleRows = document.querySelectorAll('#scalesTable tbody tr');
+            scaleRows.forEach(row => {
+                const type = row.getAttribute('data-type');
+                const status = row.getAttribute('data-status');
+                const period = row.cells[0].textContent.toLowerCase();
+                
+                const matchesType = !typeFilter || type === typeFilter;
+                const matchesStatus = !statusFilter || status === statusFilter;
+                const matchesSearch = !searchTerm || period.includes(searchTerm);
+                
+                row.style.display = (matchesType && matchesStatus && matchesSearch) ? '' : 'none';
+            });
+        }
+        
+        function viewIncidentDetails(id) {
+            const incidents = {
+                1: {
+                    title: 'Problema com equipamento de segurança',
+                    date: '15/01/2024 14:30',
+                    type: 'Segurança',
+                    severity: 'Média',
+                    status: 'Em Análise',
+                    description: 'Durante o voo AZ1234, foi detectado um problema no sistema de oxigênio de emergência. O equipamento apresentou leitura anômala durante a verificação pré-voo.',
+                    location: 'Aeroporto Internacional de São Paulo',
+                    flight: 'AZ1234',
+                    witnesses: 'Maria Santos, Pedro Costa',
+                    actions: 'Equipamento foi substituído antes da decolagem. Voo partiu com 15 minutos de atraso.',
+                    attachments: ['relatorio_seguranca.pdf', 'foto_equipamento.jpg'],
+                    updates: [
+                        { date: '15/01/2024 16:00', status: 'Em Análise', comment: 'Incidente encaminhado para análise técnica' },
+                        { date: '15/01/2024 14:30', status: 'Registrado', comment: 'Incidente registrado pelo tripulante' }
+                    ]
+                },
+                2: {
+                    title: 'Atraso na decolagem por condições climáticas',
+                    date: '12/01/2024 09:15',
+                    type: 'Climático',
+                    severity: 'Baixa',
+                    status: 'Concluído',
+                    description: 'Decolagem atrasada devido a condições climáticas adversas. Neblina densa no aeroporto de destino.',
+                    location: 'Aeroporto Internacional de São Paulo',
+                    flight: 'AZ1235',
+                    witnesses: 'João Silva',
+                    actions: 'Aguardou melhoria nas condições climáticas. Voo partiu com 45 minutos de atraso.',
+                    attachments: ['relatorio_clima.pdf'],
+                    updates: [
+                        { date: '12/01/2024 10:00', status: 'Concluído', comment: 'Incidente analisado e arquivado' },
+                        { date: '12/01/2024 09:15', status: 'Registrado', comment: 'Incidente registrado pelo tripulante' }
+                    ]
+                }
+            };
+            
+            const incident = incidents[id];
+            if (!incident) return;
+            
+            const modalBody = document.getElementById('incidentModalBody');
+            modalBody.innerHTML = `
+                <div class="grid grid-2 mb-3">
+                    <div>
+                        <p><strong>Data/Hora:</strong> ${incident.date}</p>
+                        <p><strong>Local:</strong> ${incident.location}</p>
+                        <p><strong>Voo:</strong> ${incident.flight}</p>
+                    </div>
+                    <div>
+                        <p><strong>Tipo:</strong> ${incident.type}</p>
+                        <p><strong>Severidade:</strong> <span class="status-badge status-${incident.severity === 'Baixa' ? 'success' : incident.severity === 'Média' ? 'warning' : 'error'}">${incident.severity}</span></p>
+                        <p><strong>Status:</strong> <span class="status-badge status-${incident.status === 'Concluído' ? 'success' : 'warning'}">${incident.status}</span></p>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <h4>Descrição</h4>
+                    <p>${incident.description}</p>
+                </div>
+                
+                <div class="mb-3">
+                    <h4>Testemunhas</h4>
+                    <p>${incident.witnesses || 'Não informado'}</p>
+                </div>
+                
+                <div class="mb-3">
+                    <h4>Ações Tomadas</h4>
+                    <p>${incident.actions}</p>
+                </div>
+                
+                ${incident.attachments && incident.attachments.length > 0 ? `
+                <div class="mb-3">
+                    <h4>Anexos</h4>
+                    <ul>
+                        ${incident.attachments.map(file => `<li><i class="fas fa-file"></i> ${file}</li>`).join('')}
+                    </ul>
+                </div>
+                ` : ''}
+                
+                <div class="mb-3">
+                    <h4>Atualizações</h4>
+                    <div class="timeline">
+                        ${incident.updates.map(update => `
+                            <div class="timeline-item">
+                                <div class="timeline-date">${update.date}</div>
+                                <div class="timeline-content">
+                                    <strong>${update.status}</strong> - ${update.comment}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            openModal('incidentModal');
+        }
+        
+        function viewScaleDetails(period) {
+            const scales = {
+                'jan2024': {
+                    period: 'Janeiro 2024',
+                    version: '2.1',
+                    status: 'Ativa',
+                    daysWorked: 22,
+                    totalHours: 176,
+                    lastUpdate: '15/01/2024 14:30',
+                    flights: [
+                        { date: '18/01/2024', flight: 'AZ1234', route: 'São Paulo → Rio de Janeiro', hours: '4h 15min' },
+                        { date: '19/01/2024', flight: 'AZ1235', route: 'Rio de Janeiro → São Paulo', hours: '4h 15min' },
+                        { date: '20/01/2024', flight: 'AZ1236', route: 'São Paulo → Brasília', hours: '4h 15min' }
+                    ],
+                    changes: [
+                        { version: '2.1', date: '15/01/2024 14:30', change: 'Adicionado Pedro Costa ao voo AZ1235' },
+                        { version: '2.0', date: '14/01/2024 16:45', change: 'Alterado horário do voo AZ1236' },
+                        { version: '1.0', date: '10/01/2024 09:00', change: 'Criação inicial da escala' }
+                    ]
+                }
+            };
+            
+            const scale = scales[period];
+            if (!scale) return;
+            
+            const modalBody = document.getElementById('scaleModalBody');
+            modalBody.innerHTML = `
+                <div class="grid grid-2 mb-3">
+                    <div>
+                        <p><strong>Período:</strong> ${scale.period}</p>
+                        <p><strong>Versão:</strong> ${scale.version}</p>
+                        <p><strong>Status:</strong> <span class="status-badge status-${scale.status === 'Ativa' ? 'success' : 'success'}">${scale.status}</span></p>
+                    </div>
+                    <div>
+                        <p><strong>Dias Trabalhados:</strong> ${scale.daysWorked} dias</p>
+                        <p><strong>Horas Totais:</strong> ${scale.totalHours} horas</p>
+                        <p><strong>Última Atualização:</strong> ${scale.lastUpdate}</p>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <h4>Voos da Escala</h4>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Voo</th>
+                                    <th>Rota</th>
+                                    <th>Horas</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${scale.flights.map(flight => `
+                                    <tr>
+                                        <td>${flight.date}</td>
+                                        <td>${flight.flight}</td>
+                                        <td>${flight.route}</td>
+                                        <td>${flight.hours}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <h4>Histórico de Alterações</h4>
+                    <div class="timeline">
+                        ${scale.changes.map(change => `
+                            <div class="timeline-item">
+                                <div class="timeline-date">${change.date}</div>
+                                <div class="timeline-content">
+                                    <strong>Versão ${change.version}</strong> - ${change.change}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            openModal('scaleModal');
+        }
+        
+        // Inicializar datas padrão
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const sixMonthsAgo = new Date(today.getTime() - (6 * 30 * 24 * 60 * 60 * 1000));
+            
+            // Formatar datas para input type="date"
+            const formatDate = (date) => {
+                return date.toISOString().split('T')[0];
+            };
+            
+            document.getElementById('historyStartDate').value = formatDate(sixMonthsAgo);
+            document.getElementById('historyEndDate').value = formatDate(today);
+        });
+    </script>
+</body>
+</html>

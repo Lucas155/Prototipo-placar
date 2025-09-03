@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Escalas - Sistema de Gestão</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Navegação lateral -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-user-shield"></i> Admin</h2>
+                <p>Portal Administrativo</p>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Principal</div>
+                    <a href="dashboard.html" class="nav-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Gestão</div>
+                    <a href="usuarios.html" class="nav-item">
+                        <i class="fas fa-users"></i>
+                        <span>Usuários</span>
+                    </a>
+                    <a href="escalas.html" class="nav-item active">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Escalas</span>
+                    </a>
+                    <a href="incidentes.html" class="nav-item">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Incidentes</span>
+                    </a>
+                    <a href="relatorios.html" class="nav-item">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Relatórios</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Sistema</div>
+                    <a href="#" class="nav-item">
+                        <i class="fas fa-cog"></i>
+                        <span>Configurações</span>
+                    </a>
+                    <a href="#" class="nav-item" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sair</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Conteúdo principal -->
+        <main class="main-content">
+            <div class="content-header">
+                <div class="d-flex justify-between align-center">
+                    <div>
+                        <h1>Gestão de Escalas</h1>
+                        <p>Criar, editar e gerenciar escalas de trabalho</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="openModal('scaleModal')">
+                        <i class="fas fa-plus"></i>
+                        Nova Escala
+                    </button>
+                </div>
+            </div>
+
+            <!-- Grid de Escalas -->
+            <div class="grid grid-3">
+                <!-- Escala 1 -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Escala Janeiro 2024</h3>
+                        <span class="status-badge status-active">Ativa</span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <p><strong>Período:</strong> 01/01/2024 - 31/01/2024</p>
+                        <p><strong>Criada por:</strong> João Silva</p>
+                        <p><strong>Última atualização:</strong> 15/01/2024 14:30</p>
+                        <p><strong>Versão:</strong> 3.2</p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <strong>Tripulantes:</strong>
+                        <div class="d-flex gap-1 mt-2" style="flex-wrap: wrap;">
+                            <span class="status-badge status-success">João Silva</span>
+                            <span class="status-badge status-success">Maria Santos</span>
+                            <span class="status-badge status-success">Pedro Costa</span>
+                            <span class="status-badge status-success">Ana Oliveira</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 p-2" style="background: var(--neutral-100); border-radius: 6px;">
+                        <strong>Última alteração:</strong> Adicionado Pedro Costa à escala de 20/01
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-secondary btn-sm" onclick="editScale(1)">
+                            <i class="fas fa-edit"></i> Editar
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="viewHistory(1)">
+                            <i class="fas fa-history"></i> Histórico
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="archiveScale(1)">
+                            <i class="fas fa-archive"></i> Arquivar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Escala 2 -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Escala Fevereiro 2024</h3>
+                        <span class="status-badge status-warning">Pendente</span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <p><strong>Período:</strong> 01/02/2024 - 29/02/2024</p>
+                        <p><strong>Criada por:</strong> Maria Santos</p>
+                        <p><strong>Última atualização:</strong> 14/01/2024 16:45</p>
+                        <p><strong>Versão:</strong> 1.0</p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <strong>Tripulantes:</strong>
+                        <div class="d-flex gap-1 mt-2" style="flex-wrap: wrap;">
+                            <span class="status-badge status-success">João Silva</span>
+                            <span class="status-badge status-success">Maria Santos</span>
+                            <span class="status-badge status-success">Carlos Lima</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 p-2" style="background: var(--neutral-100); border-radius: 6px;">
+                        <strong>Status:</strong> Aguardando aprovação do gestor
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-secondary btn-sm" onclick="editScale(2)">
+                            <i class="fas fa-edit"></i> Editar
+                        </button>
+                        <button class="btn btn-primary btn-sm" onclick="publishScale(2)">
+                            <i class="fas fa-publish"></i> Publicar
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="viewHistory(2)">
+                            <i class="fas fa-history"></i> Histórico
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Escala 3 -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Escala Dezembro 2023</h3>
+                        <span class="status-badge status-error">Arquivada</span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <p><strong>Período:</strong> 01/12/2023 - 31/12/2023</p>
+                        <p><strong>Criada por:</strong> João Silva</p>
+                        <p><strong>Arquivada em:</strong> 31/12/2023 23:59</p>
+                        <p><strong>Versão:</strong> 5.1</p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <strong>Tripulantes:</strong>
+                        <div class="d-flex gap-1 mt-2" style="flex-wrap: wrap;">
+                            <span class="status-badge status-success">João Silva</span>
+                            <span class="status-badge status-success">Maria Santos</span>
+                            <span class="status-badge status-success">Pedro Costa</span>
+                            <span class="status-badge status-success">Ana Oliveira</span>
+                            <span class="status-badge status-success">Carlos Lima</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 p-2" style="background: var(--neutral-100); border-radius: 6px;">
+                        <strong>Total de alterações:</strong> 15 versões durante o período
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-secondary btn-sm" onclick="viewHistory(3)">
+                            <i class="fas fa-history"></i> Histórico
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="duplicateScale(3)">
+                            <i class="fas fa-copy"></i> Duplicar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal para criar/editar escala -->
+    <div id="scaleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Nova Escala</h3>
+                <button class="modal-close" onclick="closeModal('scaleModal')">&times;</button>
+            </div>
+            
+            <form id="scaleForm" onsubmit="saveScale(event)">
+                <div class="grid grid-2">
+                    <div class="form-group">
+                        <label for="scaleTitle">Título da Escala *</label>
+                        <input type="text" id="scaleTitle" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="scaleStatus">Status *</label>
+                        <select id="scaleStatus" name="status" required>
+                            <option value="">Selecione um status</option>
+                            <option value="Pendente">Pendente</option>
+                            <option value="Ativa">Ativa</option>
+                            <option value="Arquivada">Arquivada</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="grid grid-2">
+                    <div class="form-group">
+                        <label for="scaleStartDate">Data de Início *</label>
+                        <input type="date" id="scaleStartDate" name="startDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="scaleEndDate">Data de Fim *</label>
+                        <input type="date" id="scaleEndDate" name="endDate" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Tripulantes *</label>
+                    <div class="p-3" style="border: 1px solid var(--neutral-300); border-radius: 6px; background: var(--neutral-100);">
+                        <div class="grid grid-2">
+                            <div class="form-group mb-0">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="crew" value="1">
+                                    <span>João Silva (12345)</span>
+                                </label>
+                            </div>
+                            <div class="form-group mb-0">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="crew" value="2">
+                                    <span>Maria Santos (12346)</span>
+                                </label>
+                            </div>
+                            <div class="form-group mb-0">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="crew" value="3">
+                                    <span>Pedro Costa (12347)</span>
+                                </label>
+                            </div>
+                            <div class="form-group mb-0">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="crew" value="4">
+                                    <span>Ana Oliveira (12348)</span>
+                                </label>
+                            </div>
+                            <div class="form-group mb-0">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="crew" value="5">
+                                    <span>Carlos Lima (12349)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="scaleObservations">Observações</label>
+                    <textarea id="scaleObservations" name="observations" rows="4" placeholder="Observações sobre a escala..."></textarea>
+                </div>
+                
+                <div class="d-flex justify-between mt-3">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('scaleModal')">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        Salvar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../scripts/main.js"></script>
+    <script>
+        function editScale(id) {
+            document.getElementById('modalTitle').textContent = 'Editar Escala';
+            // Simular carregamento dos dados da escala
+            document.getElementById('scaleTitle').value = 'Escala Janeiro 2024';
+            document.getElementById('scaleStatus').value = 'Ativa';
+            document.getElementById('scaleStartDate').value = '2024-01-01';
+            document.getElementById('scaleEndDate').value = '2024-01-31';
+            openModal('scaleModal');
+        }
+        
+        function saveScale(event) {
+            event.preventDefault();
+            showMessage('Escala salva com sucesso!', 'success');
+            closeModal('scaleModal');
+        }
+        
+        function publishScale(id) {
+            if (confirm('Tem certeza que deseja publicar esta escala?')) {
+                showMessage('Escala publicada com sucesso!', 'success');
+            }
+        }
+        
+        function archiveScale(id) {
+            if (confirm('Tem certeza que deseja arquivar esta escala?')) {
+                showMessage('Escala arquivada com sucesso!', 'success');
+            }
+        }
+        
+        function viewHistory(id) {
+            alert('Histórico de versões da escala #' + id + '\n\nVersão 1.0 - Criação inicial\nVersão 1.1 - Adicionado Pedro Costa\nVersão 2.0 - Reestruturação completa\nVersão 3.0 - Ajustes finais\nVersão 3.1 - Correção de horários\nVersão 3.2 - Adicionado Ana Oliveira');
+        }
+        
+        function duplicateScale(id) {
+            if (confirm('Deseja criar uma nova escala baseada nesta?')) {
+                openModal('scaleModal');
+                document.getElementById('modalTitle').textContent = 'Duplicar Escala';
+                showMessage('Escala duplicada! Preencha os novos dados.', 'info');
+            }
+        }
+    </script>
+</body>
+</html>

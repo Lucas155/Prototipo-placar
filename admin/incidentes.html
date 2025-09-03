@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Incidentes - Sistema de Gestão</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Navegação lateral -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-user-shield"></i> Admin</h2>
+                <p>Portal Administrativo</p>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Principal</div>
+                    <a href="dashboard.html" class="nav-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Gestão</div>
+                    <a href="usuarios.html" class="nav-item">
+                        <i class="fas fa-users"></i>
+                        <span>Usuários</span>
+                    </a>
+                    <a href="escalas.html" class="nav-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Escalas</span>
+                    </a>
+                    <a href="incidentes.html" class="nav-item active">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Incidentes</span>
+                    </a>
+                    <a href="relatorios.html" class="nav-item">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Relatórios</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Sistema</div>
+                    <a href="#" class="nav-item">
+                        <i class="fas fa-cog"></i>
+                        <span>Configurações</span>
+                    </a>
+                    <a href="#" class="nav-item" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sair</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Conteúdo principal -->
+        <main class="main-content">
+            <div class="content-header">
+                <div class="d-flex justify-between align-center">
+                    <div>
+                        <h1>Gestão de Incidentes</h1>
+                        <p>Acompanhar e tratar incidentes relatados</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="openModal('incidentModal')">
+                        <i class="fas fa-plus"></i>
+                        Novo Incidente
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filtros -->
+            <div class="filters">
+                <div class="filters-grid">
+                    <div class="form-group">
+                        <label for="searchInput">Buscar</label>
+                        <input type="text" id="searchInput" placeholder="ID, tripulante ou descrição" onkeyup="filterTable()">
+                    </div>
+                    <div class="form-group">
+                        <label for="statusFilter">Status</label>
+                        <select id="statusFilter" onchange="filterTable()">
+                            <option value="">Todos</option>
+                            <option value="Aberto">Aberto</option>
+                            <option value="Em Análise">Em Análise</option>
+                            <option value="Concluído">Concluído</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="priorityFilter">Prioridade</label>
+                        <select id="priorityFilter" onchange="filterTable()">
+                            <option value="">Todas</option>
+                            <option value="Alta">Alta</option>
+                            <option value="Média">Média</option>
+                            <option value="Baixa">Baixa</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="typeFilter">Tipo</label>
+                        <select id="typeFilter" onchange="filterTable()">
+                            <option value="">Todos</option>
+                            <option value="Segurança">Segurança</option>
+                            <option value="Operacional">Operacional</option>
+                            <option value="Técnico">Técnico</option>
+                            <option value="Outros">Outros</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabela de incidentes -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Lista de Incidentes</h3>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-secondary btn-sm" onclick="exportData('incidents')">
+                            <i class="fas fa-download"></i>
+                            Exportar
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="printPage()">
+                            <i class="fas fa-print"></i>
+                            Imprimir
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table" id="incidentsTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Data</th>
+                                <th>Tripulante</th>
+                                <th>Tipo</th>
+                                <th>Prioridade</th>
+                                <th>Status</th>
+                                <th>Responsável</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#123</td>
+                                <td>15/01/2024 14:30</td>
+                                <td>João Silva</td>
+                                <td>Segurança</td>
+                                <td><span class="status-badge status-error">Alta</span></td>
+                                <td><span class="status-badge status-error">Aberto</span></td>
+                                <td>-</td>
+                                <td>
+                                    <div class="d-flex gap-1">
+                                        <button class="btn btn-secondary btn-sm" onclick="viewIncident(123)">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-primary btn-sm" onclick="assignIncident(123)">
+                                            <i class="fas fa-user-plus"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#124</td>
+                                <td>15/01/2024 13:45</td>
+                                <td>Maria Santos</td>
+                                <td>Operacional</td>
+                                <td><span class="status-badge status-warning">Média</span></td>
+                                <td><span class="status-badge status-warning">Em Análise</span></td>
+                                <td>Pedro Costa</td>
+                                <td>
+                                    <div class="d-flex gap-1">
+                                        <button class="btn btn-secondary btn-sm" onclick="viewIncident(124)">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-secondary btn-sm" onclick="editIncident(124)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#125</td>
+                                <td>15/01/2024 12:20</td>
+                                <td>Pedro Costa</td>
+                                <td>Técnico</td>
+                                <td><span class="status-badge status-success">Baixa</span></td>
+                                <td><span class="status-badge status-success">Concluído</span></td>
+                                <td>João Silva</td>
+                                <td>
+                                    <div class="d-flex gap-1">
+                                        <button class="btn btn-secondary btn-sm" onclick="viewIncident(125)">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-secondary btn-sm" onclick="editIncident(125)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#126</td>
+                                <td>14/01/2024 16:15</td>
+                                <td>Ana Oliveira</td>
+                                <td>Segurança</td>
+                                <td><span class="status-badge status-error">Alta</span></td>
+                                <td><span class="status-badge status-warning">Em Análise</span></td>
+                                <td>Maria Santos</td>
+                                <td>
+                                    <div class="d-flex gap-1">
+                                        <button class="btn btn-secondary btn-sm" onclick="viewIncident(126)">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-secondary btn-sm" onclick="editIncident(126)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal para visualizar/editar incidente -->
+    <div id="incidentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Detalhes do Incidente</h3>
+                <button class="modal-close" onclick="closeModal('incidentModal')">&times;</button>
+            </div>
+            
+            <div id="incidentDetails">
+                <!-- Detalhes do incidente serão carregados aqui -->
+            </div>
+            
+            <form id="incidentForm" style="display: none;" onsubmit="saveIncident(event)">
+                <div class="grid grid-2">
+                    <div class="form-group">
+                        <label for="incidentStatus">Status *</label>
+                        <select id="incidentStatus" name="status" required>
+                            <option value="">Selecione um status</option>
+                            <option value="Aberto">Aberto</option>
+                            <option value="Em Análise">Em Análise</option>
+                            <option value="Concluído">Concluído</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="incidentPriority">Prioridade *</label>
+                        <select id="incidentPriority" name="priority" required>
+                            <option value="">Selecione uma prioridade</option>
+                            <option value="Baixa">Baixa</option>
+                            <option value="Média">Média</option>
+                            <option value="Alta">Alta</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="incidentAssignee">Designar para</label>
+                    <select id="incidentAssignee" name="assignee">
+                        <option value="">Selecione...</option>
+                        <option value="1">João Silva</option>
+                        <option value="2">Maria Santos</option>
+                        <option value="3">Pedro Costa</option>
+                        <option value="4">Ana Oliveira</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="incidentConclusion">Conclusão/Análise</label>
+                    <textarea id="incidentConclusion" name="conclusion" rows="4" placeholder="Descreva a análise ou conclusão do incidente..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="evidenceFiles">Anexar Evidências</label>
+                    <input type="file" id="evidenceFiles" name="evidence" multiple accept="image/*,.pdf,.doc,.docx">
+                    <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 5px;">
+                        Formatos aceitos: imagens, PDF, documentos
+                    </p>
+                </div>
+                
+                <div class="d-flex justify-between mt-3">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('incidentModal')">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        Salvar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../scripts/main.js"></script>
+    <script>
+        function viewIncident(id) {
+            document.getElementById('modalTitle').textContent = 'Detalhes do Incidente #' + id;
+            document.getElementById('incidentForm').style.display = 'none';
+            document.getElementById('incidentDetails').style.display = 'block';
+            
+            // Simular carregamento dos dados do incidente
+            const details = `
+                <div class="p-3" style="background: var(--neutral-100); border-radius: 6px; margin-bottom: 20px;">
+                    <div class="grid grid-2">
+                        <div>
+                            <strong>ID:</strong> #${id}
+                        </div>
+                        <div>
+                            <strong>Data:</strong> 15/01/2024 14:30
+                        </div>
+                        <div>
+                            <strong>Tripulante:</strong> João Silva
+                        </div>
+                        <div>
+                            <strong>Tipo:</strong> Segurança
+                        </div>
+                        <div>
+                            <strong>Prioridade:</strong> <span class="status-badge status-error">Alta</span>
+                        </div>
+                        <div>
+                            <strong>Status:</strong> <span class="status-badge status-error">Aberto</span>
+                        </div>
+                        <div>
+                            <strong>Local:</strong> Aeroporto Internacional
+                        </div>
+                        <div>
+                            <strong>Responsável:</strong> -
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label><strong>Descrição:</strong></label>
+                    <p>Relatado problema de segurança na área de embarque. Necessita análise urgente.</p>
+                </div>
+                
+                <div class="form-group">
+                    <label><strong>Evidências Anexadas:</strong></label>
+                    <div class="d-flex gap-1 mt-2">
+                        <span class="status-badge status-success">foto_incidente_1.jpg</span>
+                        <span class="status-badge status-success">relatorio_seguranca.pdf</span>
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-between mt-3">
+                    <button onclick="editIncident(${id})" class="btn btn-secondary">
+                        <i class="fas fa-edit"></i> Editar
+                    </button>
+                    <button onclick="closeModal('incidentModal')" class="btn btn-primary">
+                        Fechar
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('incidentDetails').innerHTML = details;
+            openModal('incidentModal');
+        }
+        
+        function editIncident(id) {
+            document.getElementById('modalTitle').textContent = 'Editar Incidente #' + id;
+            document.getElementById('incidentForm').style.display = 'block';
+            document.getElementById('incidentDetails').style.display = 'none';
+            
+            // Simular carregamento dos dados para edição
+            document.getElementById('incidentStatus').value = 'Aberto';
+            document.getElementById('incidentPriority').value = 'Alta';
+            openModal('incidentModal');
+        }
+        
+        function saveIncident(event) {
+            event.preventDefault();
+            showMessage('Incidente atualizado com sucesso!', 'success');
+            closeModal('incidentModal');
+        }
+        
+        function assignIncident(id) {
+            const assignee = prompt('Digite o nome do responsável pela análise:');
+            if (assignee) {
+                showMessage(`Incidente #${id} designado para ${assignee}`, 'success');
+            }
+        }
+        
+        function filterTable() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+            const priorityFilter = document.getElementById('priorityFilter').value;
+            const typeFilter = document.getElementById('typeFilter').value;
+            
+            const table = document.getElementById('incidentsTable');
+            const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+            
+            for (let row of rows) {
+                const id = row.cells[0].textContent.toLowerCase();
+                const tripulante = row.cells[2].textContent.toLowerCase();
+                const tipo = row.cells[3].textContent;
+                const prioridade = row.cells[4].textContent;
+                const status = row.cells[5].textContent;
+                
+                const matchesSearch = id.includes(searchTerm) || 
+                                    tripulante.includes(searchTerm);
+                const matchesStatus = !statusFilter || status.includes(statusFilter);
+                const matchesPriority = !priorityFilter || prioridade.includes(priorityFilter);
+                const matchesType = !typeFilter || tipo.includes(typeFilter);
+                
+                row.style.display = (matchesSearch && matchesStatus && matchesPriority && matchesType) ? '' : 'none';
+            }
+        }
+    </script>
+</body>
+</html>

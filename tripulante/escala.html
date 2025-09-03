@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Escala - Sistema de Gestão</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Navegação lateral -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-user"></i> Tripulante</h2>
+                <p>Portal do Tripulante</p>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Principal</div>
+                    <a href="dashboard.html" class="nav-item">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Funcionalidades</div>
+                    <a href="escala.html" class="nav-item active">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>Minha Escala</span>
+                    </a>
+                    <a href="incidente.html" class="nav-item">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Registrar Incidente</span>
+                    </a>
+                    <a href="historico.html" class="nav-item">
+                        <i class="fas fa-history"></i>
+                        <span>Histórico Pessoal</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Sistema</div>
+                    <a href="#" class="nav-item">
+                        <i class="fas fa-bell"></i>
+                        <span>Notificações</span>
+                    </a>
+                    <a href="#" class="nav-item" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sair</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Conteúdo principal -->
+        <main class="main-content">
+            <div class="content-header">
+                <div class="d-flex justify-between align-center">
+                    <div>
+                        <h1>Minha Escala</h1>
+                        <p>Visualize sua escala de trabalho atual</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-secondary btn-sm" onclick="printPage()">
+                            <i class="fas fa-print"></i>
+                            Imprimir
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="exportData('schedule')">
+                            <i class="fas fa-download"></i>
+                            Exportar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Informações da Escala -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="card-title">Escala Janeiro 2024</h3>
+                    <div class="d-flex gap-2 align-center">
+                        <span class="status-badge status-success">Versão 2.1</span>
+                        <small class="text-secondary">Última atualização: 15/01/2024 14:30</small>
+                    </div>
+                </div>
+                <div class="grid grid-2">
+                    <div>
+                        <p><strong>Período:</strong> 01/01/2024 - 31/01/2024</p>
+                        <p><strong>Status:</strong> <span class="status-badge status-active">Ativa</span></p>
+                    </div>
+                    <div>
+                        <p><strong>Total de dias:</strong> 22 dias de trabalho</p>
+                        <p><strong>Horas totais:</strong> 176 horas</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendário da Escala -->
+            <div class="grid grid-3">
+                <!-- Dia 18/01 -->
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">18/01/2024</h4>
+                        <span class="text-secondary">Quinta-feira</span>
+                    </div>
+                    <div class="mb-3">
+                        <p><strong>Voo:</strong> AZ1234</p>
+                        <p><strong>Horário:</strong> 08:30 - 12:45</p>
+                        <p><strong>Rota:</strong> São Paulo → Rio de Janeiro</p>
+                        <p><strong>Equipe:</strong> João Silva, Maria Santos</p>
+                    </div>
+                    <div class="p-2" style="background: var(--neutral-100); border-radius: 6px;">
+                        <small><strong>Observações:</strong> Voo regular, sem alterações</small>
+                    </div>
+                </div>
+
+                <!-- Dia 19/01 -->
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">19/01/2024</h4>
+                        <span class="text-secondary">Sexta-feira</span>
+                    </div>
+                    <div class="mb-3">
+                        <p><strong>Voo:</strong> AZ1235</p>
+                        <p><strong>Horário:</strong> 14:00 - 18:15</p>
+                        <p><strong>Rota:</strong> Rio de Janeiro → São Paulo</p>
+                        <p><strong>Equipe:</strong> João Silva, Pedro Costa</p>
+                    </div>
+                    <div class="p-2" style="background: var(--neutral-100); border-radius: 6px;">
+                        <small><strong>Observações:</strong> Voo regular, sem alterações</small>
+                    </div>
+                </div>
+
+                <!-- Dia 20/01 -->
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">20/01/2024</h4>
+                        <span class="text-secondary">Sábado</span>
+                    </div>
+                    <div class="mb-3">
+                        <p><strong>Voo:</strong> AZ1236</p>
+                        <p><strong>Horário:</strong> 09:30 - 13:45</p>
+                        <p><strong>Rota:</strong> São Paulo → Brasília</p>
+                        <p><strong>Equipe:</strong> João Silva, Ana Oliveira</p>
+                    </div>
+                    <div class="p-2" style="background: var(--neutral-100); border-radius: 6px;">
+                        <small><strong>Observações:</strong> Voo regular, sem alterações</small>
+                    </div>
+                </div>
+
+                <!-- Dia 21/01 -->
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">21/01/2024</h4>
+                        <span class="text-secondary">Domingo</span>
+                    </div>
+                    <div class="mb-3">
+                        <p><strong>Status:</strong> <span class="status-badge status-success">Folga</span></p>
+                    </div>
+                    <div class="p-2" style="background: var(--neutral-100); border-radius: 6px;">
+                        <small><strong>Observações:</strong> Dia de descanso</small>
+                    </div>
+                </div>
+
+                <!-- Dia 22/01 -->
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">22/01/2024</h4>
+                        <span class="text-secondary">Segunda-feira</span>
+                    </div>
+                    <div class="mb-3">
+                        <p><strong>Voo:</strong> AZ1237</p>
+                        <p><strong>Horário:</strong> 07:00 - 11:15</p>
+                        <p><strong>Rota:</strong> Brasília → São Paulo</p>
+                        <p><strong>Equipe:</strong> João Silva, Carlos Lima</p>
+                    </div>
+                    <div class="p-2" style="background: var(--neutral-100); border-radius: 6px;">
+                        <small><strong>Observações:</strong> Voo regular, sem alterações</small>
+                    </div>
+                </div>
+
+                <!-- Dia 23/01 -->
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">23/01/2024</h4>
+                        <span class="text-secondary">Terça-feira</span>
+                    </div>
+                    <div class="mb-3">
+                        <p><strong>Voo:</strong> AZ1238</p>
+                        <p><strong>Horário:</strong> 16:30 - 20:45</p>
+                        <p><strong>Rota:</strong> São Paulo → Salvador</p>
+                        <p><strong>Equipe:</strong> João Silva, Maria Santos</p>
+                    </div>
+                    <div class="p-2" style="background: var(--neutral-100); border-radius: 6px;">
+                        <small><strong>Observações:</strong> Voo regular, sem alterações</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Histórico de Versões -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-history"></i>
+                        Histórico de Versões
+                    </h3>
+                </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Versão</th>
+                                <th>Data</th>
+                                <th>Alterações</th>
+                                <th>Responsável</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="status-badge status-success">2.1</span></td>
+                                <td>15/01/2024 14:30</td>
+                                <td>Adicionado Pedro Costa ao voo AZ1235</td>
+                                <td>Maria Santos</td>
+                            </tr>
+                            <tr>
+                                <td><span class="status-badge status-warning">2.0</span></td>
+                                <td>14/01/2024 16:45</td>
+                                <td>Alterado horário do voo AZ1236</td>
+                                <td>João Silva</td>
+                            </tr>
+                            <tr>
+                                <td><span class="status-badge status-error">1.0</span></td>
+                                <td>10/01/2024 09:00</td>
+                                <td>Criação inicial da escala</td>
+                                <td>Sistema</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../scripts/main.js"></script>
+</body>
+</html>

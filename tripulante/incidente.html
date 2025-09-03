@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Incidente - Sistema de Gestão</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Navegação lateral -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-user"></i> Tripulante</h2>
+                <p>Portal do Tripulante</p>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Principal</div>
+                    <a href="dashboard.html" class="nav-item">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Funcionalidades</div>
+                    <a href="escala.html" class="nav-item">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>Minha Escala</span>
+                    </a>
+                    <a href="incidente.html" class="nav-item active">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Registrar Incidente</span>
+                    </a>
+                    <a href="historico.html" class="nav-item">
+                        <i class="fas fa-history"></i>
+                        <span>Histórico Pessoal</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Sistema</div>
+                    <a href="#" class="nav-item">
+                        <i class="fas fa-bell"></i>
+                        <span>Notificações</span>
+                    </a>
+                    <a href="#" class="nav-item" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sair</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Conteúdo principal -->
+        <main class="main-content">
+            <div class="content-header">
+                <h1>Registrar Incidente</h1>
+                <p>Registre um novo incidente para análise da equipe</p>
+            </div>
+
+            <!-- Formulário de Registro -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Novo Incidente
+                    </h3>
+                </div>
+                
+                <form id="incidentForm" class="form">
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label for="incidentDate">Data do Incidente *</label>
+                            <input type="date" id="incidentDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="incidentTime">Horário *</label>
+                            <input type="time" id="incidentTime" required>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label for="incidentLocation">Local *</label>
+                            <input type="text" id="incidentLocation" placeholder="Ex: Aeroporto Internacional de São Paulo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="incidentType">Tipo de Incidente *</label>
+                            <select id="incidentType" required>
+                                <option value="">Selecione o tipo</option>
+                                <option value="Segurança">Segurança</option>
+                                <option value="Operacional">Operacional</option>
+                                <option value="Técnico">Técnico</option>
+                                <option value="Climático">Climático</option>
+                                <option value="Outro">Outro</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="incidentTitle">Título do Incidente *</label>
+                        <input type="text" id="incidentTitle" placeholder="Ex: Problema com equipamento de segurança" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="incidentDescription">Descrição Detalhada *</label>
+                        <textarea id="incidentDescription" rows="6" placeholder="Descreva detalhadamente o que aconteceu, incluindo contexto, pessoas envolvidas, ações tomadas e consequências..." required></textarea>
+                    </div>
+
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label for="incidentSeverity">Severidade *</label>
+                            <select id="incidentSeverity" required>
+                                <option value="">Selecione a severidade</option>
+                                <option value="Baixa">Baixa - Sem impacto operacional</option>
+                                <option value="Média">Média - Impacto operacional menor</option>
+                                <option value="Alta">Alta - Impacto operacional significativo</option>
+                                <option value="Crítica">Crítica - Impacto operacional grave</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="incidentFlight">Voo Relacionado</label>
+                            <input type="text" id="incidentFlight" placeholder="Ex: AZ1234 (opcional)">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="incidentWitnesses">Testemunhas</label>
+                        <input type="text" id="incidentWitnesses" placeholder="Nomes das pessoas que presenciaram o incidente (opcional)">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="incidentActions">Ações Tomadas</label>
+                        <textarea id="incidentActions" rows="4" placeholder="Descreva as ações que foram tomadas imediatamente após o incidente..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="incidentAttachments">Anexos</label>
+                        <input type="file" id="incidentAttachments" multiple accept="image/*,.pdf,.doc,.docx">
+                        <small class="text-secondary">Formatos aceitos: JPG, PNG, PDF, DOC. Máximo 5 arquivos, 10MB cada.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="incidentConfirmation" required>
+                            <span class="checkmark"></span>
+                            Confirmo que todas as informações fornecidas são verdadeiras e completas
+                        </label>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                            Registrar Incidente
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                            <i class="fas fa-undo"></i>
+                            Limpar Formulário
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Meus Incidentes Recentes -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-list"></i>
+                        Meus Incidentes Recentes
+                    </h3>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Título</th>
+                                <th>Tipo</th>
+                                <th>Severidade</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>15/01/2024</td>
+                                <td>Problema com equipamento de segurança</td>
+                                <td>Segurança</td>
+                                <td><span class="status-badge status-warning">Média</span></td>
+                                <td><span class="status-badge status-warning">Em Análise</span></td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm" onclick="viewIncident(1)">
+                                        <i class="fas fa-eye"></i>
+                                        Ver
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>12/01/2024</td>
+                                <td>Atraso na decolagem por condições climáticas</td>
+                                <td>Climático</td>
+                                <td><span class="status-badge status-success">Baixa</span></td>
+                                <td><span class="status-badge status-success">Concluído</span></td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm" onclick="viewIncident(2)">
+                                        <i class="fas fa-eye"></i>
+                                        Ver
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>08/01/2024</td>
+                                <td>Falha técnica no sistema de comunicação</td>
+                                <td>Técnico</td>
+                                <td><span class="status-badge status-error">Alta</span></td>
+                                <td><span class="status-badge status-success">Concluído</span></td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm" onclick="viewIncident(3)">
+                                        <i class="fas fa-eye"></i>
+                                        Ver
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal de Visualização do Incidente -->
+    <div id="incidentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Detalhes do Incidente</h3>
+                <button class="modal-close" onclick="closeModal('incidentModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="incidentModalBody">
+                <!-- Conteúdo será carregado dinamicamente -->
+            </div>
+        </div>
+    </div>
+
+    <script src="../scripts/main.js"></script>
+    <script>
+        function resetForm() {
+            document.getElementById('incidentForm').reset();
+            showMessage('Formulário limpo com sucesso!', 'success');
+        }
+        
+        function viewIncident(id) {
+            // Simular dados do incidente
+            const incidents = {
+                1: {
+                    title: 'Problema com equipamento de segurança',
+                    date: '15/01/2024 14:30',
+                    type: 'Segurança',
+                    severity: 'Média',
+                    status: 'Em Análise',
+                    description: 'Durante o voo AZ1234, foi detectado um problema no sistema de oxigênio de emergência. O equipamento apresentou leitura anômala durante a verificação pré-voo.',
+                    location: 'Aeroporto Internacional de São Paulo',
+                    flight: 'AZ1234',
+                    witnesses: 'Maria Santos, Pedro Costa',
+                    actions: 'Equipamento foi substituído antes da decolagem. Voo partiu com 15 minutos de atraso.',
+                    attachments: ['relatorio_seguranca.pdf', 'foto_equipamento.jpg']
+                },
+                2: {
+                    title: 'Atraso na decolagem por condições climáticas',
+                    date: '12/01/2024 09:15',
+                    type: 'Climático',
+                    severity: 'Baixa',
+                    status: 'Concluído',
+                    description: 'Decolagem atrasada devido a condições climáticas adversas. Neblina densa no aeroporto de destino.',
+                    location: 'Aeroporto Internacional de São Paulo',
+                    flight: 'AZ1235',
+                    witnesses: 'João Silva',
+                    actions: 'Aguardou melhoria nas condições climáticas. Voo partiu com 45 minutos de atraso.',
+                    attachments: ['relatorio_clima.pdf']
+                },
+                3: {
+                    title: 'Falha técnica no sistema de comunicação',
+                    date: '08/01/2024 16:20',
+                    type: 'Técnico',
+                    severity: 'Alta',
+                    status: 'Concluído',
+                    description: 'Falha no sistema de comunicação interna da aeronave durante o voo. Problema foi identificado e corrigido em voo.',
+                    location: 'Em voo - Rota São Paulo-Rio',
+                    flight: 'AZ1236',
+                    witnesses: 'Maria Santos, Carlos Lima',
+                    actions: 'Sistema foi reiniciado em voo. Comunicação restaurada após 10 minutos.',
+                    attachments: ['relatorio_tecnico.pdf', 'log_sistema.txt']
+                }
+            };
+            
+            const incident = incidents[id];
+            if (!incident) return;
+            
+            const modalBody = document.getElementById('incidentModalBody');
+            modalBody.innerHTML = `
+                <div class="grid grid-2 mb-3">
+                    <div>
+                        <p><strong>Data/Hora:</strong> ${incident.date}</p>
+                        <p><strong>Local:</strong> ${incident.location}</p>
+                        <p><strong>Voo:</strong> ${incident.flight}</p>
+                    </div>
+                    <div>
+                        <p><strong>Tipo:</strong> ${incident.type}</p>
+                        <p><strong>Severidade:</strong> <span class="status-badge status-${incident.severity === 'Baixa' ? 'success' : incident.severity === 'Média' ? 'warning' : 'error'}">${incident.severity}</span></p>
+                        <p><strong>Status:</strong> <span class="status-badge status-${incident.status === 'Concluído' ? 'success' : 'warning'}">${incident.status}</span></p>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <h4>Descrição</h4>
+                    <p>${incident.description}</p>
+                </div>
+                
+                <div class="mb-3">
+                    <h4>Testemunhas</h4>
+                    <p>${incident.witnesses || 'Não informado'}</p>
+                </div>
+                
+                <div class="mb-3">
+                    <h4>Ações Tomadas</h4>
+                    <p>${incident.actions}</p>
+                </div>
+                
+                ${incident.attachments && incident.attachments.length > 0 ? `
+                <div class="mb-3">
+                    <h4>Anexos</h4>
+                    <ul>
+                        ${incident.attachments.map(file => `<li><i class="fas fa-file"></i> ${file}</li>`).join('')}
+                    </ul>
+                </div>
+                ` : ''}
+            `;
+            
+            openModal('incidentModal');
+        }
+        
+        // Adicionar validação específica para o formulário
+        document.getElementById('incidentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validação adicional específica para incidentes
+            const severity = document.getElementById('incidentSeverity').value;
+            const description = document.getElementById('incidentDescription').value;
+            
+            if (description.length < 50) {
+                showMessage('A descrição deve ter pelo menos 50 caracteres.', 'error');
+                return;
+            }
+            
+            if (severity === 'Crítica' && description.length < 100) {
+                showMessage('Para incidentes críticos, a descrição deve ser mais detalhada (mínimo 100 caracteres).', 'error');
+                return;
+            }
+            
+            showMessage('Incidente registrado com sucesso! Será analisado pela equipe.', 'success');
+            
+            // Simular envio
+            setTimeout(() => {
+                this.reset();
+                showMessage('Formulário limpo automaticamente.', 'info');
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
