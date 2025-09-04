@@ -74,21 +74,11 @@ Campo de vacina convertido para **sistema de seleção** com:
 - COVID-19
 - Outras (campo personalizado)
 
-### 6. Verificação Automática de Conformidade
-O sistema verifica automaticamente se um tripulante pode ser escalado baseado em:
-
-- ✅ **Jornada disponível**: Tripulante deve estar disponível para trabalho
-- ✅ **Licenças em dia**: Todas as licenças válidas com margem de segurança de 30 dias
-- ✅ **Treinamentos válidos**: Todos os treinamentos obrigatórios em dia
-- ✅ **Experiência recente**: Voo nos últimos 90 dias e horas mínimas
-- ✅ **Documentação válida**: ICAO, CMA, passaporte e outros documentos em dia
-- ✅ **Vacinas em dia**: Todas as vacinas obrigatórias com validade
-
-### 7. Sistema de Validação Inteligente
-- Verificação em tempo real durante o preenchimento
-- Alertas visuais para itens pendentes
-- Status de conformidade automático
-- Relatórios detalhados de não conformidade
+### 6. Sistema de Validação de Campos
+- Validação de campos obrigatórios
+- Verificação de formatos de data
+- Controle de tipos de arquivo para anexos
+- Interface responsiva e intuitiva
 
 ## 🚀 Como Usar
 
@@ -125,11 +115,11 @@ O sistema verifica automaticamente se um tripulante pode ser escalado baseado em
 3. Informe a **Validade da Vacina**
 4. Use **"Adicionar Outra Vacina"** para múltiplas vacinas
 
-### Verificação de Conformidade
-O sistema mostra em tempo real:
-- **Verde (✓)**: Item aprovado
-- **Vermelho (✗)**: Item reprovado
-- **Status geral**: APROVADO ou REPROVADO para escala
+### Salvando o Cadastro
+Após preencher todos os campos obrigatórios:
+- Clique em **"Salvar"** para confirmar o cadastro
+- O sistema validará os campos obrigatórios
+- Uma mensagem de sucesso será exibida
 
 ## 📁 Estrutura de Arquivos
 
@@ -155,56 +145,39 @@ styles/
 - **Font Awesome**: Ícones para melhor UX
 - **Grid CSS**: Layout responsivo e organizado
 
-## 📊 Regras de Validação
+## 📊 Campos Obrigatórios
 
-### Jornada de Trabalho
-- Deve estar marcada como "Disponível"
-- Outros status (Restrição, Folga) impedem escalação
+### Informações Básicas
+- Nome completo
+- Email
+- Matrícula
+- Perfil (admin/tripulante)
+- Status
 
-### Licenças (Múltiplas)
-- **Todas** as licenças devem ter validade futura
-- Margem de segurança de 30 dias antes do vencimento
-- ICAO Inglês obrigatório com validade
-- Sistema verifica cada licença individualmente
+### Para Tripulantes
+- CPF
+- Data de nascimento
+- Nacionalidade
+- Telefone
+- Cargo
+- Data de admissão
+- Jornada de trabalho
+- Pelo menos uma licença válida
+- ICAO Inglês com validade
+- Treinamentos obrigatórios
 
-### Vistos (Múltiplos)
-- **Todos** os vistos devem ter validade futura
-- **País do visto é obrigatório** para identificação
-- Cada visto pode ter seu próprio arquivo anexado
-- Sistema verifica cada visto individualmente
+## 💾 Salvamento de Dados
 
-### Treinamentos
-- Simulador, CRM e Emergência devem estar válidos
-- Validade baseada na data atual
+### Validação Automática
+- Campos obrigatórios são verificados antes do salvamento
+- Mensagens de erro para campos inválidos
+- Confirmação de sucesso após salvamento
 
-### Experiência Recente
-- Último voo deve ser nos últimos 90 dias
-- Mínimo de 3 horas nos últimos 90 dias
-- Total de horas acumuladas para referência
-
-### Documentação
-- CMA (Certificado Médico Aeronáutico) válido
-- Passaporte válido (quando aplicável)
-- **Anexos obrigatórios** para documentos importantes
-- Sistema de validação de arquivos
-
-### Vacinas Obrigatórias
-- **Todas** as vacinas obrigatórias devem estar em dia
-- Validade baseada na data atual
-- Sistema verifica cada vacina individualmente
-
-## 🚨 Alertas e Notificações
-
-### Tripulante Aprovado
-- ✅ Status verde
-- Mensagem: "APROVADO para escala"
-- Pode ser incluído em escalas
-
-### Tripulante Reprovado
-- ❌ Status vermelho
-- Mensagem: "REPROVADO - Não pode ser escalado"
-- Lista de itens pendentes
-- Recomendações para correção
+### Dados Armazenados
+- Todas as informações do tripulante
+- Anexos de documentos
+- Histórico de alterações
+- Múltiplas licenças, vistos e vacinas
 
 ## 🔄 Integração com Escalas
 
