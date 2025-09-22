@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treinamentos - Sistema de Gestão</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Navegação lateral -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-graduation-cap"></i> Treinamentos</h2>
+                <p>Gestão de Treinamentos</p>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Principal</div>
+                    <a href="dashboard.html" class="nav-item">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Voltar ao Dashboard</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Gestão</div>
+                    <a href="usuarios.html" class="nav-item">
+                        <i class="fas fa-users"></i>
+                        <span>Usuários</span>
+                    </a>
+                    <a href="treinamentos.html" class="nav-item active">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Treinamentos</span>
+                    </a>
+                    <a href="escalas.html" class="nav-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Escalas</span>
+                    </a>
+                    <a href="incidentes.html" class="nav-item">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Incidentes</span>
+                    </a>
+                    <a href="relatorios.html" class="nav-item">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Relatórios</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Sistema</div>
+                    <a href="#" class="nav-item" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Sair</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Conteúdo principal -->
+        <main class="main-content">
+            <div class="content-header">
+                <h1>Treinamentos</h1>
+                <p>Gerencie todos os treinamentos dos tripulantes</p>
+            </div>
+
+            <!-- Estatísticas -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">45</div>
+                    <div class="stat-label">Em Dia</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">Vencidos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Vencendo em 30 dias</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">65</div>
+                    <div class="stat-label">Total de Treinamentos</div>
+                </div>
+            </div>
+
+            <!-- Filtros -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-filter"></i>
+                        Filtros
+                    </h3>
+                </div>
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="filterTripulante">Tripulante:</label>
+                        <input type="text" id="filterTripulante" placeholder="Nome ou matrícula">
+                    </div>
+                    <div class="filter-group">
+                        <label for="filterTipo">Tipo:</label>
+                        <select id="filterTipo">
+                            <option value="">Todos os tipos</option>
+                            <option value="simulador">Simulador</option>
+                            <option value="crm">CRM</option>
+                            <option value="emergencia">Emergência</option>
+                            <option value="seguranca">Segurança</option>
+                            <option value="medico">Médico</option>
+                            <option value="outros">Outros</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filterStatus">Status:</label>
+                        <select id="filterStatus">
+                            <option value="">Todos os status</option>
+                            <option value="em-dia">Em Dia</option>
+                            <option value="vencido">Vencido</option>
+                            <option value="vencendo">Vencendo em 30 dias</option>
+                        </select>
+                    </div>
+                    <div class="filter-actions">
+                        <button class="btn btn-primary" onclick="filterTrainings()">
+                            <i class="fas fa-search"></i>
+                            Filtrar
+                        </button>
+                        <button class="btn btn-secondary" onclick="clearFilters()">
+                            <i class="fas fa-times"></i>
+                            Limpar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabela de treinamentos -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-graduation-cap"></i>
+                        Lista de Treinamentos
+                    </h3>
+                    <div class="card-actions">
+                        <button class="btn btn-primary btn-sm" onclick="openModal('trainingModal')">
+                            <i class="fas fa-plus"></i>
+                            Novo Treinamento
+                        </button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th data-sort="tripulante">Tripulante</th>
+                                <th data-sort="tipo">Tipo</th>
+                                <th data-sort="data">Data Realização</th>
+                                <th data-sort="validade">Validade</th>
+                                <th data-sort="status">Status</th>
+                                <th data-sort="instituicao">Instituição</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="user-info">
+                                        <strong>João Silva</strong>
+                                        <small>EMP001</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge badge-primary">Simulador</span>
+                                </td>
+                                <td>15/01/2024</td>
+                                <td>15/01/2025</td>
+                                <td>
+                                    <span class="status-badge status-active">Em Dia</span>
+                                </td>
+                                <td>Centro de Treinamento ABC</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn btn-sm btn-secondary" onclick="viewTraining(1)" title="Visualizar">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-primary" onclick="editTraining(1)" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteTraining(1)" title="Excluir">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="user-info">
+                                        <strong>Maria Santos</strong>
+                                        <small>EMP002</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge badge-warning">CRM</span>
+                                </td>
+                                <td>10/12/2023</td>
+                                <td>10/12/2024</td>
+                                <td>
+                                    <span class="status-badge status-warning">Vencendo</span>
+                                </td>
+                                <td>Instituto de Aviação</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn btn-sm btn-secondary" onclick="viewTraining(2)" title="Visualizar">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-primary" onclick="editTraining(2)" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteTraining(2)" title="Excluir">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="user-info">
+                                        <strong>Pedro Costa</strong>
+                                        <small>EMP003</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge badge-danger">Emergência</span>
+                                </td>
+                                <td>05/11/2023</td>
+                                <td>05/11/2024</td>
+                                <td>
+                                    <span class="status-badge status-error">Vencido</span>
+                                </td>
+                                <td>Centro de Emergência XYZ</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn btn-sm btn-secondary" onclick="viewTraining(3)" title="Visualizar">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-primary" onclick="editTraining(3)" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteTraining(3)" title="Excluir">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="user-info">
+                                        <strong>Ana Oliveira</strong>
+                                        <small>EMP004</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge badge-success">Segurança</span>
+                                </td>
+                                <td>20/01/2024</td>
+                                <td>20/01/2026</td>
+                                <td>
+                                    <span class="status-badge status-active">Em Dia</span>
+                                </td>
+                                <td>Academia de Segurança</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn btn-sm btn-secondary" onclick="viewTraining(4)" title="Visualizar">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-primary" onclick="editTraining(4)" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteTraining(4)" title="Excluir">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal de Treinamento -->
+    <div class="modal" id="trainingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Novo Treinamento</h3>
+                <button class="modal-close" onclick="closeModal('trainingModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="trainingForm" onsubmit="saveTraining(event)">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="tripulante">Tripulante *</label>
+                        <select id="tripulante" name="tripulante" required>
+                            <option value="">Selecione um tripulante</option>
+                            <option value="EMP001">João Silva - EMP001</option>
+                            <option value="EMP002">Maria Santos - EMP002</option>
+                            <option value="EMP003">Pedro Costa - EMP003</option>
+                            <option value="EMP004">Ana Oliveira - EMP004</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tipoTreinamento">Tipo de Treinamento *</label>
+                        <select id="tipoTreinamento" name="tipoTreinamento" required>
+                            <option value="">Selecione o tipo</option>
+                            <option value="simulador">Simulador</option>
+                            <option value="crm">CRM</option>
+                            <option value="emergencia">Emergência</option>
+                            <option value="seguranca">Segurança</option>
+                            <option value="medico">Médico</option>
+                            <option value="outros">Outros</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="dataRealizacao">Data de Realização *</label>
+                            <input type="date" id="dataRealizacao" name="dataRealizacao" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dataValidade">Data de Validade *</label>
+                            <input type="date" id="dataValidade" name="dataValidade" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="instituicao">Instituição/Instrutor</label>
+                        <input type="text" id="instituicao" name="instituicao" placeholder="Nome da instituição ou instrutor">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="observacoes">Observações</label>
+                        <textarea id="observacoes" name="observacoes" rows="3" placeholder="Observações adicionais sobre o treinamento"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="certificado">Certificado</label>
+                        <input type="file" id="certificado" name="certificado" accept=".pdf,.jpg,.jpeg,.png">
+                        <small class="form-help">Formatos aceitos: PDF, JPG, PNG (máx. 5MB)</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('trainingModal')">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        Salvar Treinamento
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Visualização -->
+    <div class="modal" id="viewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Detalhes do Treinamento</h3>
+                <button class="modal-close" onclick="closeModal('viewModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="training-details">
+                    <div class="detail-row">
+                        <strong>Tripulante:</strong>
+                        <span id="viewTripulante">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <strong>Tipo:</strong>
+                        <span id="viewTipo">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <strong>Data de Realização:</strong>
+                        <span id="viewDataRealizacao">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <strong>Validade:</strong>
+                        <span id="viewValidade">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <strong>Status:</strong>
+                        <span id="viewStatus">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <strong>Instituição:</strong>
+                        <span id="viewInstituicao">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <strong>Observações:</strong>
+                        <span id="viewObservacoes">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <strong>Certificado:</strong>
+                        <span id="viewCertificado">-</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('viewModal')">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../scripts/main.js"></script>
+    <script>
+        // Funções específicas de treinamento
+        function filterTrainings() {
+            const tripulante = document.getElementById('filterTripulante').value;
+            const tipo = document.getElementById('filterTipo').value;
+            const status = document.getElementById('filterStatus').value;
+            
+            showMessage('Filtros aplicados!', 'success');
+            // Aqui seria implementada a lógica de filtro real
+        }
+
+        // Aplicar filtros da URL ao carregar a página
+        function applyUrlFilters() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const filter = urlParams.get('filter');
+            const name = urlParams.get('name');
+            
+            if (filter && name) {
+                document.getElementById('filterTripulante').value = name;
+                showMessage(`Filtro aplicado para: ${name}`, 'info');
+                // Aplicar filtro automaticamente
+                filterTrainings();
+            }
+        }
+
+        function clearFilters() {
+            document.getElementById('filterTripulante').value = '';
+            document.getElementById('filterTipo').value = '';
+            document.getElementById('filterStatus').value = '';
+            showMessage('Filtros limpos!', 'info');
+        }
+
+        function saveTraining(event) {
+            event.preventDefault();
+            showMessage('Treinamento salvo com sucesso!', 'success');
+            closeModal('trainingModal');
+            document.getElementById('trainingForm').reset();
+        }
+
+        function viewTraining(id) {
+            // Simular dados do treinamento
+            document.getElementById('viewTripulante').textContent = 'João Silva (EMP001)';
+            document.getElementById('viewTipo').textContent = 'Simulador';
+            document.getElementById('viewDataRealizacao').textContent = '15/01/2024';
+            document.getElementById('viewValidade').textContent = '15/01/2025';
+            document.getElementById('viewStatus').innerHTML = '<span class="status-badge status-active">Em Dia</span>';
+            document.getElementById('viewInstituicao').textContent = 'Centro de Treinamento ABC';
+            document.getElementById('viewObservacoes').textContent = 'Treinamento realizado com sucesso.';
+            document.getElementById('viewCertificado').innerHTML = '<a href="#" class="btn btn-sm btn-primary"><i class="fas fa-download"></i> Baixar Certificado</a>';
+            
+            openModal('viewModal');
+        }
+
+        function editTraining(id) {
+            // Simular carregamento de dados para edição
+            document.getElementById('modalTitle').textContent = 'Editar Treinamento';
+            document.getElementById('tripulante').value = 'EMP001';
+            document.getElementById('tipoTreinamento').value = 'simulador';
+            document.getElementById('dataRealizacao').value = '2024-01-15';
+            document.getElementById('dataValidade').value = '2025-01-15';
+            document.getElementById('instituicao').value = 'Centro de Treinamento ABC';
+            document.getElementById('observacoes').value = 'Treinamento realizado com sucesso.';
+            
+            openModal('trainingModal');
+        }
+
+        function deleteTraining(id) {
+            if (confirm('Tem certeza que deseja excluir este treinamento?')) {
+                showMessage('Treinamento excluído com sucesso!', 'success');
+            }
+        }
+
+        function exportTrainings() {
+            showMessage('Exportando dados de treinamentos...', 'info');
+            setTimeout(() => {
+                showMessage('Dados exportados com sucesso!', 'success');
+            }, 2000);
+        }
+
+        // Calcular status automaticamente baseado na data de validade
+        function calculateStatus(validade) {
+            const hoje = new Date();
+            const dataValidade = new Date(validade);
+            const diffTime = dataValidade - hoje;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays < 0) {
+                return { status: 'vencido', label: 'Vencido', class: 'status-error' };
+            } else if (diffDays <= 30) {
+                return { status: 'vencendo', label: 'Vencendo em 30 dias', class: 'status-warning' };
+            } else {
+                return { status: 'em-dia', label: 'Em Dia', class: 'status-active' };
+            }
+        }
+
+
+        // Aplicar filtros da URL quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            applyUrlFilters();
+        });
+    </script>
+    <style>
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-info strong {
+            font-weight: 600;
+        }
+
+        .user-info small {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-primary {
+            background: var(--primary-100);
+            color: var(--primary-700);
+        }
+
+        .badge-warning {
+            background: var(--warning-100);
+            color: var(--warning-700);
+        }
+
+        .badge-danger {
+            background: var(--error-100);
+            color: var(--error-700);
+        }
+
+        .badge-success {
+            background: var(--success-100);
+            color: var(--success-700);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 4px;
+        }
+
+        .training-details {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--neutral-200);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-help {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            margin-top: 4px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            padding: 12px 16px;
+            border: 2px solid var(--neutral-300);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            background: white;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-group input:focus,
+        .filter-group select:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .filter-group input:hover,
+        .filter-group select:hover {
+            border-color: var(--neutral-400);
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto;
+            gap: 20px;
+            align-items: end;
+            padding: 20px;
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                padding: 16px;
+            }
+            
+            .filter-actions {
+                justify-content: stretch;
+                margin-top: 8px;
+            }
+            
+            .filter-actions .btn {
+                flex: 1;
+            }
+
+            .filter-group input,
+            .filter-group select {
+                padding: 10px 14px;
+                font-size: 0.8rem;
+            }
+        }
+
+    </style>
+</body>
+</html>

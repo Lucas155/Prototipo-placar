@@ -142,6 +142,7 @@
         .tripulante-toggle:hover {
             background: #2980b9;
         }
+
     </style>
 </head>
 <body>
@@ -165,6 +166,10 @@
                     <a href="usuarios.html" class="nav-item active">
                         <i class="fas fa-users"></i>
                         <span>Usuários</span>
+                    </a>
+                    <a href="treinamentos.html" class="nav-item">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Treinamentos</span>
                     </a>
                     <a href="escalas.html" class="nav-item">
                         <i class="fas fa-calendar-alt"></i>
@@ -280,10 +285,13 @@
                                 <td>Hoje, 14:30</td>
                                 <td>
                                     <div class="d-flex gap-1">
-                                        <button class="btn btn-secondary btn-sm" onclick="editUser(1)">
+                                        <button class="btn btn-secondary btn-sm" onclick="editUser(1)" title="Editar">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="btn btn-secondary btn-sm" onclick="toggleUserStatus(1)">
+                                        <button class="btn btn-primary btn-sm" onclick="viewUserTrainings('EMP001', 'João Silva')" title="Ver Treinamentos">
+                                            <i class="fas fa-graduation-cap"></i>
+                                        </button>
+                                        <button class="btn btn-secondary btn-sm" onclick="toggleUserStatus(1)" title="Alterar Status">
                                             <i class="fas fa-ban"></i>
                                         </button>
                                     </div>
@@ -298,10 +306,13 @@
                                 <td>Ontem, 16:45</td>
                                 <td>
                                     <div class="d-flex gap-1">
-                                        <button class="btn btn-secondary btn-sm" onclick="editUser(2)">
+                                        <button class="btn btn-secondary btn-sm" onclick="editUser(2)" title="Editar">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="btn btn-secondary btn-sm" onclick="toggleUserStatus(2)">
+                                        <button class="btn btn-primary btn-sm" onclick="viewUserTrainings('EMP002', 'Maria Santos')" title="Ver Treinamentos">
+                                            <i class="fas fa-graduation-cap"></i>
+                                        </button>
+                                        <button class="btn btn-secondary btn-sm" onclick="toggleUserStatus(2)" title="Alterar Status">
                                             <i class="fas fa-ban"></i>
                                         </button>
                                     </div>
@@ -316,10 +327,13 @@
                                 <td>2 dias atrás</td>
                                 <td>
                                     <div class="d-flex gap-1">
-                                        <button class="btn btn-secondary btn-sm" onclick="editUser(3)">
+                                        <button class="btn btn-secondary btn-sm" onclick="editUser(3)" title="Editar">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="btn btn-secondary btn-sm" onclick="toggleUserStatus(3)">
+                                        <button class="btn btn-primary btn-sm" onclick="viewUserTrainings('EMP003', 'Pedro Costa')" title="Ver Treinamentos">
+                                            <i class="fas fa-graduation-cap"></i>
+                                        </button>
+                                        <button class="btn btn-secondary btn-sm" onclick="toggleUserStatus(3)" title="Alterar Status">
                                             <i class="fas fa-check"></i>
                                         </button>
                                     </div>
@@ -334,10 +348,13 @@
                                 <td>Hoje, 09:15</td>
                                 <td>
                                     <div class="d-flex gap-1">
-                                        <button class="btn btn-secondary btn-sm" onclick="editUser(4)">
+                                        <button class="btn btn-secondary btn-sm" onclick="editUser(4)" title="Editar">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="btn btn-secondary btn-sm" onclick="toggleUserStatus(4)">
+                                        <button class="btn btn-primary btn-sm" onclick="viewUserTrainings('EMP004', 'Ana Oliveira')" title="Ver Treinamentos">
+                                            <i class="fas fa-graduation-cap"></i>
+                                        </button>
+                                        <button class="btn btn-secondary btn-sm" onclick="toggleUserStatus(4)" title="Alterar Status">
                                             <i class="fas fa-ban"></i>
                                         </button>
                                     </div>
@@ -1300,6 +1317,12 @@
         function filterUsers() {
             // Simular filtro
             showMessage('Filtros aplicados!', 'success');
+        }
+
+        function viewUserTrainings(matricula, nome) {
+            // Redirecionar para a página de treinamentos com filtro aplicado
+            const url = `treinamentos.html?filter=${encodeURIComponent(matricula)}&name=${encodeURIComponent(nome)}`;
+            window.open(url, '_blank');
         }
         
         // Teste inicial para verificar se a função está funcionando

@@ -537,3 +537,19 @@ function editUser(userId) {
     document.getElementById('userPasswordConfirm').required = false;
     openModal('userModal');
 }
+
+// Função para controlar submenu de navegação
+function toggleSubmenu(submenuId) {
+    const submenu = document.getElementById(submenuId);
+    const parentItem = submenu.closest('.nav-item-with-submenu');
+    
+    // Fechar outros submenus
+    document.querySelectorAll('.nav-item-with-submenu').forEach(item => {
+        if (item !== parentItem) {
+            item.classList.remove('active');
+        }
+    });
+    
+    // Toggle do submenu atual
+    parentItem.classList.toggle('active');
+}
