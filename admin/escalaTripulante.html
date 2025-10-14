@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escala de Trabalho</title>
+<style>
+/* Mantive exatamente seus estilos originais, sem alterações */
+:root { --bg: #f8fafc; --card: #ffffff; --text: #1e293b; --subtext: #64748b; --border: #e2e8f0; --accent: #2563eb; }
+[data-theme="dark"] { --bg:#0f172a; --card:#1e293b; --text:#f1f5f9; --subtext:#94a3b8; --border:#334155; --accent:#3b82f6; }
+body { font-family: "Inter", sans-serif; background: var(--bg); color: var(--text); margin:0; padding:24px; transition: background 0.3s, color 0.3s; }
+header { text-align:center; margin-bottom:24px; }
+header h1 { margin:0; font-size:1.8rem; }
+header p { color: var(--subtext); font-size:0.9rem; }
+.top-bar { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+.theme-toggle { background: var(--card); border:1px solid var(--border); border-radius:50px; padding:6px 14px; cursor:pointer; color: var(--text); transition:0.2s; }
+.theme-toggle:hover { background: var(--accent); color:#fff; }
+.cards { display:grid; grid-template-columns:repeat(auto-fit, minmax(160px,1fr)); gap:16px; margin-bottom:24px; }
+.card { background: var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; box-shadow:0 2px 6px rgba(0,0,0,0.05); text-align:center; }
+.card h3 { margin:0; font-size:1rem; color: var(--subtext); }
+.card p { font-size:1.4rem; font-weight:bold; margin:6px 0 0 0; }
+.filter-bar { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:16px; }
+input, select { padding:8px 12px; border-radius:8px; border:1px solid var(--border); background: var(--card); color: var(--text); }
+.table-container { background: var(--card); border-radius:16px; padding:16px; box-shadow:0 2px 10px rgba(0,0,0,0.05); overflow-x:auto; }
+table { width:100%; border-collapse:collapse; text-align:center; }
+th { background: var(--accent); color:#fff; padding:10px; position:sticky; top:0; }
+td { padding:8px; border-bottom:1px solid var(--border); position:relative; }
+tr:hover { background: rgba(37,99,235,0.05); }
+.tripulante { text-align:left; font-weight:600; }
+td span { display:inline-block; border-radius:8px; padding:4px 8px; font-weight:600; cursor:pointer; transition: transform 0.15s; }
+td span:hover { transform: scale(1.1); }
+.SE { background: #475569; color:#fff; } .RE { background:#94a3b8;color:#fff; } .SO { background:#1e3a8a;color:#fff; } .FB { background:#0ea5e9;color:#fff; } .VO { background:#2563eb;color:#fff; } .FE { background:#facc15;color:#1e293b; } .FR { background:#e2e8f0;color:#1e293b; } .FS { background:#f1f5f9;color:#1e293b; } .RQ { background:#22c55e;color:#fff; } .TN { background:#ea580c;color:#fff; } .IN { background:#f97316;color:#fff; } .IS { background:#0ea5e9;color:#fff; }
+.tooltip { visibility:hidden; background: var(--text); color:#fff; text-align:center; border-radius:6px; padding:6px; position:absolute; z-index:1; bottom:120%; left:50%; transform:translateX(-50%); opacity:0; transition: opacity 0.2s; white-space:nowrap; }
+td:hover .tooltip { visibility:visible; opacity:1; }
+.legenda { margin-top:30px; background: var(--card); border-radius:12px; padding:16px; border:1px solid var(--border); }
+.legenda-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(140px,1fr)); gap:10px; margin-top:10px; }
+.legenda-item { display:flex; align-items:center; gap:8px; cursor:pointer; padding:6px; border-radius:8px; transition:0.2s; }
+.legenda-item:hover { background: rgba(37,99,235,0.1); }
+.cor { width:18px; height:18px; border-radius:4px; }
+footer { margin-top:30px; text-align:right; color: var(--subtext); font-size:0.9rem; }
+.month-selector { margin-bottom:16px; display:flex; justify-content:center; gap:8px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Escala de Trabalho</h1>
+  <p>Visualize e filtre a escala de tripulantes</p>
+</header>
+
+<div class="top-bar">
+  <div class="filter-bar">
+    <input id="filtroNome" type="text" placeholder="Buscar por nome...">
+    <select id="filtroTipo"><option value="">Todos os tipos</option></select>
+  </div>
+  <button class="theme-toggle" id="toggleTheme">🌙 Modo Escuro</button>
+</div>
+
+<div class="month-selector">
+  <select id="mesSelect"></select>
+  <select id="anoSelect"></select>
+</div>
+
+<div class="cards">
+  <div class="card"><h3>Total Tripulantes</h3><p id="totalTrip">0</p></div>
+  <div class="card"><h3>Voos do Mês</h3><p id="totalVoos">0</p></div>
+  <div class="card"><h3>Folgas</h3><p id="totalFolgas">0</p></div>
+  <div class="card"><h3>Recheques</h3><p id="totalRQ">0</p></div>
+</div>
+
+<div class="table-container">
+  <table id="tabelaEscala">
+    <thead><tr id="cabecalho"></tr></thead>
+    <tbody id="corpoTabela"></tbody>
+  </table>
+</div>
+
+<div class="legenda">
+  <h3>Legenda (clique para filtrar)</h3>
+  <div class="legenda-grid" id="legendaContainer"></div>
+</div>
+
+<footer id="footerData">Data de emissão: </footer>
+
+<script>
+const escala = [
+  { nome: "Fabiano", dias: [] },
+  { nome: "Antenor", dias: [] },
+  { nome: "Fernando", dias: [] },
+  { nome: "Gabriel", dias: [] },
+  { nome: "Jonas", dias: [] },
+  { nome: "Andre", dias: [] },
+  { nome: "Thiago", dias: [] },
+];
+
+// Tipos de escala para teste
+const tipos = ["SE","RE","SO","FB","VO","FE","FR","FS","RQ","TN","IN","IS"];
+function gerarDiasAleatorios(qtd){
+  return Array.from({length:qtd},()=>tipos[Math.floor(Math.random()*tipos.length)]);
+}
+
+const legenda = {
+  SE: "Fora de Escala", RE: "Reserva", SO: "Sobreaviso",
+  FB: "Fora de Base", VO: "Voo", FE: "Férias",
+  FR: "Folga Regulamentar", FS: "Folga Social",
+  RQ: "Recheque", TN: "Treinamento de Solo",
+  IN: "Instrução", IS: "Inspeção de Saúde"
+};
+
+// Seletores de mês/ano
+const mesSelect = document.getElementById("mesSelect");
+const anoSelect = document.getElementById("anoSelect");
+const corpo = document.getElementById("corpoTabela");
+const cabecalho = document.getElementById("cabecalho");
+const footerData = document.getElementById("footerData");
+
+const meses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+meses.forEach((m,i)=>{ const opt=document.createElement("option"); opt.value=i; opt.text=m; mesSelect.appendChild(opt); });
+for(let y=2020;y<=new Date().getFullYear();y++){ const opt=document.createElement("option"); opt.value=y; opt.text=y; anoSelect.appendChild(opt); }
+
+let currentMonth = new Date().getMonth();
+let currentYear = new Date().getFullYear();
+mesSelect.value=currentMonth;
+anoSelect.value=currentYear;
+
+function diasNoMes(m, y){ return new Date(y, m+1, 0).getDate(); }
+
+function renderTabela(){
+  const qtdDias = diasNoMes(currentMonth, currentYear);
+
+  // cabeçalho
+  cabecalho.innerHTML = `<th>Tripulante</th>` + Array.from({length:qtdDias},(_,i)=>`<th>${i+1}</th>`).join("");
+
+  // corpo da tabela
+  corpo.innerHTML = "";
+  let totalVO=0,totalFR=0,totalRQ=0;
+  escala.forEach(t => {
+    if(t.dias.length!==qtdDias) t.dias=gerarDiasAleatorios(qtdDias);
+    let linha = `<td class="tripulante">${t.nome}</td>`;
+    t.dias.forEach(tipo=>{
+      if(tipo==="VO") totalVO++;
+      if(tipo==="FR" || tipo==="FS") totalFR++;
+      if(tipo==="RQ") totalRQ++;
+      linha+=`<td><span class="${tipo}">${tipo}<div class="tooltip">${legenda[tipo]||""}</div></span></td>`;
+    });
+    corpo.innerHTML+=`<tr>${linha}</tr>`;
+  });
+  document.getElementById("totalTrip").textContent = escala.length;
+  document.getElementById("totalVoos").textContent = totalVO;
+  document.getElementById("totalFolgas").textContent = totalFR;
+  document.getElementById("totalRQ").textContent = totalRQ;
+  footerData.textContent = `Data de emissão: ${diasNoMes(currentMonth,currentYear)}/${currentMonth+1}/${currentYear}`;
+}
+
+// Atualizar ao mudar mês ou ano
+mesSelect.addEventListener("change",()=>{ currentMonth=parseInt(mesSelect.value); renderTabela(); });
+anoSelect.addEventListener("change",()=>{ currentYear=parseInt(anoSelect.value); renderTabela(); });
+
+// Legenda
+const legendaContainer = document.getElementById("legendaContainer");
+Object.entries(legenda).forEach(([sigla,desc])=>{
+  const div=document.createElement("div");
+  div.className="legenda-item";
+  div.innerHTML=`<div class="cor ${sigla}"></div><span><b>${sigla}</b> - ${desc}</span>`;
+  div.onclick=()=>{ document.getElementById("filtroTipo").value=sigla; renderTabela(); };
+  legendaContainer.appendChild(div);
+});
+
+// Filtros
+document.getElementById("filtroNome").addEventListener("input",()=>renderTabela());
+const selectTipo=document.getElementById("filtroTipo");
+Object.keys(legenda).forEach(sigla=>{ const opt=document.createElement("option"); opt.value=sigla; opt.text=`${sigla} - ${legenda[sigla]}`; selectTipo.appendChild(opt); });
+selectTipo.addEventListener("change",()=>renderTabela());
+
+// Modo escuro
+const toggle=document.getElementById("toggleTheme");
+toggle.addEventListener("click",()=>{
+  const dark=document.body.getAttribute("data-theme")==="dark";
+  document.body.setAttribute("data-theme",dark?"light":"dark");
+  toggle.textContent = dark?"🌙 Modo Escuro":"☀️ Modo Claro";
+});
+
+renderTabela();
+</script>
+</body>
+</html>
