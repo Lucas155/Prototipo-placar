@@ -1,44 +1,51 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
 <title>Escala de Trabalho</title>
 <style>
-/* Mantive exatamente seus estilos originais, sem alterações */
-:root { --bg: #f8fafc; --card: #ffffff; --text: #1e293b; --subtext: #64748b; --border: #e2e8f0; --accent: #2563eb; }
+/* === Mantive exatamente seu estilo original === */
+:root { --bg:#f8fafc; --card:#ffffff; --text:#1e293b; --subtext:#64748b; --border:#e2e8f0; --accent:#2563eb; }
 [data-theme="dark"] { --bg:#0f172a; --card:#1e293b; --text:#f1f5f9; --subtext:#94a3b8; --border:#334155; --accent:#3b82f6; }
-body { font-family: "Inter", sans-serif; background: var(--bg); color: var(--text); margin:0; padding:24px; transition: background 0.3s, color 0.3s; }
-header { text-align:center; margin-bottom:24px; }
-header h1 { margin:0; font-size:1.8rem; }
-header p { color: var(--subtext); font-size:0.9rem; }
-.top-bar { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
-.theme-toggle { background: var(--card); border:1px solid var(--border); border-radius:50px; padding:6px 14px; cursor:pointer; color: var(--text); transition:0.2s; }
-.theme-toggle:hover { background: var(--accent); color:#fff; }
-.cards { display:grid; grid-template-columns:repeat(auto-fit, minmax(160px,1fr)); gap:16px; margin-bottom:24px; }
-.card { background: var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; box-shadow:0 2px 6px rgba(0,0,0,0.05); text-align:center; }
-.card h3 { margin:0; font-size:1rem; color: var(--subtext); }
-.card p { font-size:1.4rem; font-weight:bold; margin:6px 0 0 0; }
-.filter-bar { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:16px; }
-input, select { padding:8px 12px; border-radius:8px; border:1px solid var(--border); background: var(--card); color: var(--text); }
-.table-container { background: var(--card); border-radius:16px; padding:16px; box-shadow:0 2px 10px rgba(0,0,0,0.05); overflow-x:auto; }
-table { width:100%; border-collapse:collapse; text-align:center; }
-th { background: var(--accent); color:#fff; padding:10px; position:sticky; top:0; }
-td { padding:8px; border-bottom:1px solid var(--border); position:relative; }
+body { font-family: "Inter", sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 24px; transition: background 0.3s, color 0.3s; }
+header { text-align: center; margin-bottom: 24px; }
+header h1 { margin: 0; font-size: 1.8rem; }
+header p { color: var(--subtext); font-size: 0.9rem; }
+.top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.theme-toggle { background: var(--card); border: 1px solid var(--border); border-radius: 50px; padding: 6px 14px; cursor: pointer; color: var(--text); transition: 0.2s; }
+.theme-toggle:hover { background: var(--accent); color: #fff; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); text-align: center; }
+.card h3 { margin: 0; font-size: 1rem; color: var(--subtext); }
+.card p { font-size: 1.4rem; font-weight: bold; margin: 6px 0 0 0; }
+.filter-bar { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; align-items:center; }
+input, select { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text); }
+.table-container { background: var(--card); border-radius: 16px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; text-align: center; }
+th { background: var(--accent); color: #fff; padding: 10px; position: sticky; top: 0; }
+td { padding: 8px; border-bottom: 1px solid var(--border); position: relative; }
 tr:hover { background: rgba(37,99,235,0.05); }
-.tripulante { text-align:left; font-weight:600; }
-td span { display:inline-block; border-radius:8px; padding:4px 8px; font-weight:600; cursor:pointer; transition: transform 0.15s; }
+.tripulante { text-align: left; font-weight: 600; }
+td span { display: inline-block; border-radius: 8px; padding: 4px 8px; font-weight: 600; cursor: pointer; transition: transform 0.15s; }
 td span:hover { transform: scale(1.1); }
-.SE { background: #475569; color:#fff; } .RE { background:#94a3b8;color:#fff; } .SO { background:#1e3a8a;color:#fff; } .FB { background:#0ea5e9;color:#fff; } .VO { background:#2563eb;color:#fff; } .FE { background:#facc15;color:#1e293b; } .FR { background:#e2e8f0;color:#1e293b; } .FS { background:#f1f5f9;color:#1e293b; } .RQ { background:#22c55e;color:#fff; } .TN { background:#ea580c;color:#fff; } .IN { background:#f97316;color:#fff; } .IS { background:#0ea5e9;color:#fff; }
-.tooltip { visibility:hidden; background: var(--text); color:#fff; text-align:center; border-radius:6px; padding:6px; position:absolute; z-index:1; bottom:120%; left:50%; transform:translateX(-50%); opacity:0; transition: opacity 0.2s; white-space:nowrap; }
-td:hover .tooltip { visibility:visible; opacity:1; }
-.legenda { margin-top:30px; background: var(--card); border-radius:12px; padding:16px; border:1px solid var(--border); }
-.legenda-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(140px,1fr)); gap:10px; margin-top:10px; }
-.legenda-item { display:flex; align-items:center; gap:8px; cursor:pointer; padding:6px; border-radius:8px; transition:0.2s; }
+.SE { background: #475569; color: #fff; } .RE { background: #94a3b8; color: #fff; } .SO { background: #1e3a8a; color: #fff; } .FB { background: #0ea5e9; color: #fff; } .VO { background: #2563eb; color: #fff; } .FE { background: #facc15; color: #1e293b; } .FR { background: #e2e8f0; color: #1e293b; } .FS { background: #f1f5f9; color: #1e293b; } .RQ { background: #22c55e; color: #fff; } .TN { background: #ea580c; color: #fff; } .IN { background: #f97316; color: #fff; } .IS { background: #0ea5e9; color: #fff; }
+.tooltip { visibility: hidden; background: var(--text); color: #fff; text-align: center; border-radius: 6px; padding: 6px; position: absolute; z-index: 1; bottom: 120%; left: 50%; transform: translateX(-50%); opacity: 0; transition: opacity 0.2s; white-space: nowrap; }
+td:hover .tooltip { visibility: visible; opacity: 1; }
+.legenda { margin-top: 30px; background: var(--card); border-radius: 12px; padding: 16px; border: 1px solid var(--border); }
+.legenda-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 10px; }
+.legenda-item { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px; border-radius: 8px; transition: 0.2s; }
 .legenda-item:hover { background: rgba(37,99,235,0.1); }
-.cor { width:18px; height:18px; border-radius:4px; }
-footer { margin-top:30px; text-align:right; color: var(--subtext); font-size:0.9rem; }
-.month-selector { margin-bottom:16px; display:flex; justify-content:center; gap:8px; }
+.cor { width: 18px; height: 18px; border-radius: 4px; }
+footer { margin-top: 30px; text-align: right; color: var(--subtext); font-size: 0.9rem; }
+.month-selector { margin-bottom: 16px; display: flex; justify-content: center; gap: 8px; align-items:center; }
+button.edit-btn { margin-top: 4px; padding: 2px 6px; border-radius: 6px; border: none; background: var(--accent); color: #fff; cursor: pointer; font-size: 0.75rem; }
+button.primary { background: var(--accent); color: #fff; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; }
+.modal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap:8px; max-height: 50vh; overflow:auto; padding:6px 0; }
+.small-select { width:100%; padding:6px 8px; border-radius:6px; border:1px solid var(--border); background:var(--card); color:var(--text); }
+.name-input { width:100%; padding:8px 10px; border-radius:8px; border:1px solid var(--border); background:var(--card); color:var(--text); }
+.small-label { font-size:0.85rem; color:var(--subtext); margin-bottom:4px; display:block; }
+.header-actions { display:flex; gap:8px; align-items:center; }
 </style>
 </head>
 <body>
@@ -50,15 +57,20 @@ footer { margin-top:30px; text-align:right; color: var(--subtext); font-size:0.9
 
 <div class="top-bar">
   <div class="filter-bar">
-    <input id="filtroNome" type="text" placeholder="Buscar por nome...">
+    <input id="filtroNome" type="text" placeholder="Buscar por nome..." />
     <select id="filtroTipo"><option value="">Todos os tipos</option></select>
   </div>
-  <button class="theme-toggle" id="toggleTheme">🌙 Modo Escuro</button>
+  <div class="header-actions">
+    <button id="btnCadastrar" class="primary">Cadastrar Escala</button>
+    <button class="theme-toggle" id="toggleTheme">🌙 Modo Escuro</button>
+  </div>
 </div>
 
 <div class="month-selector">
+  <button id="prevMonth" class="edit-btn">&larr;</button>
   <select id="mesSelect"></select>
   <select id="anoSelect"></select>
+  <button id="nextMonth" class="edit-btn">&rarr;</button>
 </div>
 
 <div class="cards">
@@ -82,105 +94,448 @@ footer { margin-top:30px; text-align:right; color: var(--subtext); font-size:0.9
 
 <footer id="footerData">Data de emissão: </footer>
 
+<!-- Modal (criar/editar) -->
+<div id="modalEscala" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);align-items:center;justify-content:center;z-index:9999;">
+  <div style="background:var(--card); width:920px; max-width:95%; border-radius:12px; padding:18px; box-shadow:0 8px 24px rgba(0,0,0,0.25);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+      <h3 id="modalTitulo">Cadastrar / Editar Escala</h3>
+      <div>
+        <button id="fecharModal" class="edit-btn" style="background:var(--border); color:var(--text);">Fechar</button>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:12px; align-items:center; margin-bottom:12px;">
+      <div style="flex:1">
+        <label class="small-label">Nome do Tripulante</label>
+        <input id="modalNome" class="name-input" placeholder="Ex: João Silva" />
+      </div>
+      <div style="width:160px">
+        <label class="small-label">Mês</label>
+        <select id="modalMes" class="small-select"></select>
+      </div>
+      <div style="width:120px">
+        <label class="small-label">Ano</label>
+        <select id="modalAno" class="small-select"></select>
+      </div>
+    </div>
+
+    <div>
+      <label class="small-label">Dias (selecione um tipo por dia)</label>
+      <div id="modalDias" class="modal-grid"></div>
+    </div>
+
+    <div style="text-align:right; margin-top:12px;">
+      <button id="salvarEscala" class="primary">Salvar</button>
+    </div>
+  </div>
+</div>
+
 <script>
-const escala = [
-  { nome: "Fabiano", dias: [] },
-  { nome: "Antenor", dias: [] },
-  { nome: "Fernando", dias: [] },
-  { nome: "Gabriel", dias: [] },
-  { nome: "Jonas", dias: [] },
-  { nome: "Andre", dias: [] },
-  { nome: "Thiago", dias: [] },
-];
-
-// Tipos de escala para teste
+/* ========= Dados iniciais e utilitários ========= */
 const tipos = ["SE","RE","SO","FB","VO","FE","FR","FS","RQ","TN","IN","IS"];
-function gerarDiasAleatorios(qtd){
-  return Array.from({length:qtd},()=>tipos[Math.floor(Math.random()*tipos.length)]);
-}
+const legenda = { SE:"Fora de Escala", RE:"Reserva", SO:"Sobreaviso", FB:"Fora de Base", VO:"Voo", FE:"Férias", FR:"Folga Regulamentar", FS:"Folga Social", RQ:"Recheque", TN:"Treinamento de Solo", IN:"Instrução", IS:"Inspeção de Saúde" };
+const mesesNomes = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+const LS_KEY = "escalas";
 
-const legenda = {
-  SE: "Fora de Escala", RE: "Reserva", SO: "Sobreaviso",
-  FB: "Fora de Base", VO: "Voo", FE: "Férias",
-  FR: "Folga Regulamentar", FS: "Folga Social",
-  RQ: "Recheque", TN: "Treinamento de Solo",
-  IN: "Instrução", IS: "Inspeção de Saúde"
-};
+/* exemplo de tripulantes iniciais (usado apenas para criar linhas vazias se não houver nada salvo) */
+const tripulantesPadrao = ["Fabiano","Antenor","Fernando","Gabriel","Jonas","Andre","Thiago"];
 
-// Seletores de mês/ano
+/* ==== seleccionando elementos ==== */
 const mesSelect = document.getElementById("mesSelect");
 const anoSelect = document.getElementById("anoSelect");
-const corpo = document.getElementById("corpoTabela");
+const corpoTabela = document.getElementById("corpoTabela");
 const cabecalho = document.getElementById("cabecalho");
 const footerData = document.getElementById("footerData");
+const legendaContainer = document.getElementById("legendaContainer");
 
-const meses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
-meses.forEach((m,i)=>{ const opt=document.createElement("option"); opt.value=i; opt.text=m; mesSelect.appendChild(opt); });
-for(let y=2020;y<=new Date().getFullYear();y++){ const opt=document.createElement("option"); opt.value=y; opt.text=y; anoSelect.appendChild(opt); }
+const filtroNome = document.getElementById("filtroNome");
+const filtroTipo = document.getElementById("filtroTipo");
 
+const modal = document.getElementById("modalEscala");
+const modalTitulo = document.getElementById("modalTitulo");
+const modalNome = document.getElementById("modalNome");
+const modalMes = document.getElementById("modalMes");
+const modalAno = document.getElementById("modalAno");
+const modalDias = document.getElementById("modalDias");
+const btnSalvar = document.getElementById("salvarEscala");
+const btnFecharModal = document.getElementById("fecharModal");
+const btnCadastrar = document.getElementById("btnCadastrar");
+const prevMonthBtn = document.getElementById("prevMonth");
+const nextMonthBtn = document.getElementById("nextMonth");
+
+const totalTrip = document.getElementById("totalTrip");
+const totalVoos = document.getElementById("totalVoos");
+const totalFolgas = document.getElementById("totalFolgas");
+const totalRQ = document.getElementById("totalRQ");
+
+/* ==== preencher selects mês/ano ==== */
+mesesNomes.forEach((m,i)=>{ const o=document.createElement("option"); o.value=i; o.text=m; mesSelect.appendChild(o); const o2=o.cloneNode(true); modalMes.appendChild(o2); });
+const anoInicio = 2020;
+const anoAtual = new Date().getFullYear();
+for(let y=anoInicio;y<=anoAtual+2;y++){ const o=document.createElement("option"); o.value=y; o.text=y; anoSelect.appendChild(o); modalAno.appendChild(o.cloneNode(true)); }
+
+/* ==== estado atual (mês/ano) ==== */
 let currentMonth = new Date().getMonth();
 let currentYear = new Date().getFullYear();
-mesSelect.value=currentMonth;
-anoSelect.value=currentYear;
+mesSelect.value = currentMonth;
+anoSelect.value = currentYear;
+modalMes.value = currentMonth;
+modalAno.value = currentYear;
 
-function diasNoMes(m, y){ return new Date(y, m+1, 0).getDate(); }
+/* ==== localStorage helpers ==== */
+function readStorage(){ try{ return JSON.parse(localStorage.getItem(LS_KEY) || "{}"); }catch(e){ return {}; } }
+function writeStorage(obj){ localStorage.setItem(LS_KEY, JSON.stringify(obj)); }
+function keyFor(m,y){ const mm = String(m+1).padStart(2,"0"); return `${y}-${mm}`; }
+
+/* retorna array de escalas do mês (cada item: {nome, dias:[]}) */
+function getEscalasMes(m,y){
+  const data = readStorage();
+  const key = keyFor(m,y);
+  return data[key] ? structuredClone(data[key]) : null;
+}
+function saveEscalasMes(m,y,arr){
+  const data = readStorage();
+  data[keyFor(m,y)] = arr;
+  writeStorage(data);
+}
+
+/* se não houver escalas no mês atual, inicializamos com tripulantesPadrao (dias vazios) */
+function ensureInitialMes(m,y){
+  let arr = getEscalasMes(m,y);
+  if(!arr){
+    arr = tripulantesPadrao.map(nome => ({ nome, dias: [] }));
+    saveEscalasMes(m,y,arr);
+  }
+  return arr;
+}
+
+/* ==== utilitário dias no mês ==== */
+function diasNoMes(m,y){ return new Date(y, m+1, 0).getDate(); }
+
+/* ==== preencher legenda e filtro de tipos ==== */
+Object.entries(legenda).forEach(([sigla,desc])=>{
+  const div = document.createElement("div");
+  div.className = "legenda-item";
+  div.innerHTML = `<div class="cor ${sigla}"></div><span><b>${sigla}</b> - ${desc}</span>`;
+  div.onclick = ()=>{ filtroTipo.value = sigla; renderTabela(); };
+  legendaContainer.appendChild(div);
+
+  const opt = document.createElement("option");
+  opt.value = sigla;
+  opt.text = `${sigla} - ${desc}`;
+  filtroTipo.appendChild(opt);
+});
+
+/* ==== Renderizar cabeçalho e tabela ==== */
+function renderCabecalho(){
+  const qtd = diasNoMes(currentMonth,currentYear);
+  cabecalho.innerHTML = `<th>Tripulante</th>` + Array.from({length:qtd},(_,i)=>`<th>${i+1}</th>`).join("");
+}
 
 function renderTabela(){
-  const qtdDias = diasNoMes(currentMonth, currentYear);
+  renderCabecalho();
+  const qtdDias = diasNoMes(currentMonth,currentYear);
+  let escalas = getEscalasMes(currentMonth,currentYear);
+  if(!escalas) escalas = ensureInitialMes(currentMonth,currentYear);
 
-  // cabeçalho
-  cabecalho.innerHTML = `<th>Tripulante</th>` + Array.from({length:qtdDias},(_,i)=>`<th>${i+1}</th>`).join("");
+  // aplicar filtro por nome e tipo
+  const nomeFiltro = filtroNome.value.trim().toLowerCase();
+  const tipoFiltro = filtroTipo.value;
 
-  // corpo da tabela
-  corpo.innerHTML = "";
-  let totalVO=0,totalFR=0,totalRQ=0;
-  escala.forEach(t => {
-    if(t.dias.length!==qtdDias) t.dias=gerarDiasAleatorios(qtdDias);
-    let linha = `<td class="tripulante">${t.nome}</td>`;
-    t.dias.forEach(tipo=>{
-      if(tipo==="VO") totalVO++;
-      if(tipo==="FR" || tipo==="FS") totalFR++;
-      if(tipo==="RQ") totalRQ++;
-      linha+=`<td><span class="${tipo}">${tipo}<div class="tooltip">${legenda[tipo]||""}</div></span></td>`;
+  // atualizar estatísticas
+  let vo=0, fr=0, rq=0;
+
+  corpoTabela.innerHTML = "";
+  escalas.forEach(item=>{
+    // garantir array dias com o tamanho correto (vazio ou existentes)
+    if(!Array.isArray(item.dias) || item.dias.length !== qtdDias) {
+      // se já existirem dias, ajustar até qtdDias preservando; senão deixa vazio
+      const newDias = Array.from({length:qtdDias}, (_,i)=> item.dias && item.dias[i] ? item.dias[i] : "");
+      item.dias = newDias;
+    }
+    // aplicar filtro por nome
+    if(nomeFiltro && !item.nome.toLowerCase().includes(nomeFiltro)) return;
+
+    let linha = document.createElement("tr");
+    let tdNome = document.createElement("td");
+    tdNome.className = "tripulante";
+    tdNome.innerHTML = `${item.nome}<br/>`;
+    const btnEdit = document.createElement("button");
+    btnEdit.textContent = "Editar";
+    btnEdit.className = "edit-btn";
+    btnEdit.onclick = ()=> abrirModal("edit", item.nome);
+    tdNome.appendChild(btnEdit);
+    linha.appendChild(tdNome);
+
+    // dias
+    item.dias.forEach((t, idx) => {
+      const td = document.createElement("td");
+      if(t){
+        const span = document.createElement("span");
+        span.className = t;
+        span.innerHTML = `${t}<div class="tooltip">${legenda[t]||""}</div>`;
+        td.appendChild(span);
+      } else {
+        td.textContent = "";
+      }
+      // estatísticas mesmo se for filtrado por tipo? we'll count overall displayed rows only
+      if(t==="VO") vo++;
+      if(t==="FR" || t==="FS") fr++;
+      if(t==="RQ") rq++;
+      // se houver filtro de tipo, esconder se não bater
+      if(tipoFiltro && t !== tipoFiltro) {
+        td.style.opacity = "0.25";
+      }
+      linha.appendChild(td);
     });
-    corpo.innerHTML+=`<tr>${linha}</tr>`;
+
+    // adicionar à tabela se passou no filtro de tipo também: if filtroTipo e nenhuma célula bateu -> maybe still show but faded; user wanted filter earlier to hide rows. To keep previous behavior: show rows but cells non-matching empty. We'll keep as above.
+    corpoTabela.appendChild(linha);
   });
-  document.getElementById("totalTrip").textContent = escala.length;
-  document.getElementById("totalVoos").textContent = totalVO;
-  document.getElementById("totalFolgas").textContent = totalFR;
-  document.getElementById("totalRQ").textContent = totalRQ;
+
+  // atualizar cards
+  totalTrip.textContent = getEscalasMes(currentMonth,currentYear)?.length ?? 0;
+  totalVoos.textContent = vo;
+  totalFolgas.textContent = fr;
+  totalRQ.textContent = rq;
+
+  // footer data
   footerData.textContent = `Data de emissão: ${diasNoMes(currentMonth,currentYear)}/${currentMonth+1}/${currentYear}`;
 }
 
-// Atualizar ao mudar mês ou ano
-mesSelect.addEventListener("change",()=>{ currentMonth=parseInt(mesSelect.value); renderTabela(); });
-anoSelect.addEventListener("change",()=>{ currentYear=parseInt(anoSelect.value); renderTabela(); });
+/* ==== Modal: abrir em 'create' ou 'edit' ==== */
+/*
+  regras:
+  - modo "create": permite escolher VO nos selects
+  - modo "edit": não permite selecionar VO em nenhum select e dias que já são VO ficam desabilitados (imutáveis)
+*/
+let modalMode = "create"; // 'create' | 'edit'
+let editingName = null;
 
-// Legenda
-const legendaContainer = document.getElementById("legendaContainer");
-Object.entries(legenda).forEach(([sigla,desc])=>{
-  const div=document.createElement("div");
-  div.className="legenda-item";
-  div.innerHTML=`<div class="cor ${sigla}"></div><span><b>${sigla}</b> - ${desc}</span>`;
-  div.onclick=()=>{ document.getElementById("filtroTipo").value=sigla; renderTabela(); };
-  legendaContainer.appendChild(div);
+function abrirModal(mode, nome=null){
+  modalMode = mode;
+  editingName = nome;
+  modal.style.display = "flex";
+  // preparar mês/ano do modal igual seleção atual por padrão
+  modalMes.value = currentMonth;
+  modalAno.value = currentYear;
+  modalNome.value = nome || "";
+  modalTitulo.textContent = mode === "create" ? "Cadastrar Escala" : `Editar Escala - ${nome}`;
+
+  // gerar campos de dias
+  gerarCamposDias();
+  // se edit, preencher os valores
+  if(mode === "edit" && nome){
+    const escalas = getEscalasMes(currentMonth,currentYear) || [];
+    const item = escalas.find(it => it.nome === nome);
+    if(item){
+      // preencher selects conforme item.dias
+      Array.from(modalDias.children).forEach((wrap, idx) => {
+        const sel = wrap.querySelector("select");
+        sel.value = item.dias[idx] || "";
+        // se dia actual for VO -> bloquear select (não editável)
+        if(item.dias[idx] === "VO"){
+          sel.disabled = true;
+        } else {
+          // modo edit: remover opção VO para não permitir mudar para VO
+          Array.from(sel.options).forEach(opt => { if(opt.value === "VO") opt.remove(); });
+        }
+      });
+    }
+  } else {
+    // create mode - ensure all selects enabled and include VO option
+    Array.from(modalDias.children).forEach((wrap, idx) => {
+      const sel = wrap.querySelector("select");
+      sel.disabled = false;
+      sel.value = "";
+    });
+  }
+}
+
+/* cria os selects de 1..N dias no modal */
+function gerarCamposDias(){
+  modalDias.innerHTML = "";
+  const qtd = diasNoMes(parseInt(modalMes.value), parseInt(modalAno.value));
+  for(let i=0;i<qtd;i++){
+    const container = document.createElement("div");
+    container.style.display = "flex";
+    container.style.flexDirection = "column";
+    const label = document.createElement("label");
+    label.className = "small-label";
+    label.textContent = String(i+1);
+    const sel = document.createElement("select");
+    sel.className = "small-select";
+    const emptyOpt = document.createElement("option");
+    emptyOpt.value = "";
+    emptyOpt.text = "";
+    sel.appendChild(emptyOpt);
+    tipos.forEach(tp => {
+      const o = document.createElement("option");
+      o.value = tp;
+      o.text = tp;
+      sel.appendChild(o);
+    });
+    container.appendChild(label);
+    container.appendChild(sel);
+    modalDias.appendChild(container);
+  }
+}
+
+/* fechar modal */
+btnFecharModal.addEventListener("click", ()=>{ modal.style.display = "none"; });
+
+/* quando mudar mês/ano no modal, regenerar campos */
+modalMes.addEventListener("change", gerarCamposDias);
+modalAno.addEventListener("change", gerarCamposDias);
+
+/* cadastrar: abrir modal em modo create */
+btnCadastrar.addEventListener("click", ()=> abrirModal("create", null));
+
+/* salvar no modal */
+btnSalvar.addEventListener("click", ()=>{
+  const nome = modalNome.value.trim();
+  if(!nome){ alert("Preencha o nome do tripulante."); return; }
+  const m = parseInt(modalMes.value);
+  const y = parseInt(modalAno.value);
+  const qtd = diasNoMes(m,y);
+  const selects = Array.from(modalDias.querySelectorAll("select"));
+  if(selects.length !== qtd){ alert("Erro: número de dias inconsistente."); return; }
+  const dias = selects.map(s => s.value || "");
+
+  // em modo edit: garantir que VO não foi alterado (os que eram VO estavam disabled)
+  const escalasMes = getEscalasMes(m,y) || [];
+  if(modalMode === "edit"){
+    // localizar item
+    const item = escalasMes.find(it => it.nome === editingName);
+    if(!item){ alert("Escala não encontrada para edição."); return; }
+    // manter os VO imutáveis (se algum select foi desbloqueado erroneamente, reforçamos)
+    for(let i=0;i<dias.length;i++){
+      if(item.dias[i] === "VO"){
+        dias[i] = "VO";
+      }
+    }
+    // atualizar item
+    item.dias = dias;
+  } else {
+    // create: se já existir escala com mesmo nome no mês, confirm update ou negar
+    const exists = escalasMes.find(it => it.nome.toLowerCase() === nome.toLowerCase());
+    if(exists){
+      if(!confirm("Já existe uma escala para este nome nesse mês — deseja sobrescrever?")) return;
+      exists.dias = dias;
+    } else {
+      escalasMes.push({ nome, dias });
+    }
+  }
+  saveEscalasMes(m,y, escalasMes);
+  // se salvamos no mês/ano atualmente exibido, atualizar render
+  if(m === currentMonth && y === currentYear) renderTabela();
+  modal.style.display = "none";
 });
 
-// Filtros
-document.getElementById("filtroNome").addEventListener("input",()=>renderTabela());
-const selectTipo=document.getElementById("filtroTipo");
-Object.keys(legenda).forEach(sigla=>{ const opt=document.createElement("option"); opt.value=sigla; opt.text=`${sigla} - ${legenda[sigla]}`; selectTipo.appendChild(opt); });
-selectTipo.addEventListener("change",()=>renderTabela());
+/* abrir modal em edição por nome -> usada por botão editar, e também por função pública */
+function abrirModal(mode, nome){
+  // sobrescrita para garantir referência válida (já temos função definida mais acima — manter)
+  // já implementado anteriormente — esta chamada usa a função definida.
+  // (nada aqui; a função acima já faz o trabalho)
+}
 
-// Modo escuro
-const toggle=document.getElementById("toggleTheme");
-toggle.addEventListener("click",()=>{
-  const dark=document.body.getAttribute("data-theme")==="dark";
-  document.body.setAttribute("data-theme",dark?"light":"dark");
-  toggle.textContent = dark?"🌙 Modo Escuro":"☀️ Modo Claro";
+/* ==== controles de mês/ano principais ==== */
+mesSelect.addEventListener("change", ()=>{
+  currentMonth = parseInt(mesSelect.value);
+  // sincronizar modal selects por padrão
+  modalMes.value = currentMonth;
+  renderTabela();
+});
+anoSelect.addEventListener("change", ()=>{
+  currentYear = parseInt(anoSelect.value);
+  modalAno.value = currentYear;
+  renderTabela();
+});
+prevMonthBtn.addEventListener("click", ()=>{
+  currentMonth--;
+  if(currentMonth < 0){ currentMonth = 11; currentYear--; }
+  if(currentYear < anoInicio) currentYear = anoInicio;
+  mesSelect.value = currentMonth;
+  anoSelect.value = currentYear;
+  modalMes.value = currentMonth;
+  modalAno.value = currentYear;
+  renderTabela();
+});
+nextMonthBtn.addEventListener("click", ()=>{
+  currentMonth++;
+  if(currentMonth > 11){ currentMonth = 0; currentYear++; }
+  mesSelect.value = currentMonth;
+  anoSelect.value = currentYear;
+  modalMes.value = currentMonth;
+  modalAno.value = currentYear;
+  renderTabela();
 });
 
+/* filtro input handlers */
+filtroNome.addEventListener("input", ()=> renderTabela());
+filtroTipo.addEventListener("change", ()=> renderTabela());
+
+/* tema toggle (mantive implementação existente) */
+const toggle = document.getElementById("toggleTheme");
+toggle.addEventListener("click", ()=>{
+  const dark = document.body.getAttribute("data-theme") === "dark";
+  document.body.setAttribute("data-theme", dark ? "light" : "dark");
+  toggle.textContent = dark ? "🌙 Modo Escuro" : "☀️ Modo Claro";
+});
+
+/* evento de editar -> precisamos delegar, pois as linhas são recriadas; mas já atribuímos onclick direto ao botão ao criar linhas. 
+   Implementação de abrirModal("edit", nome) foi criada acima. */
+
+/* Inicial: garantir que exista ao menos o mês atual no storage */
+ensureInitialMes(currentMonth,currentYear);
 renderTabela();
+
+/* Forçar atualização quando usuário clicar em um nome do modal já existente: se o usuário abrir modal em edit via botão, nós chamamos abrirModal("edit", nome)
+   Mas como definimos abrirModal acima e re-definimos posteriormente por engano, assegure a função correta:
+*/
+(function ensureOpenFn(){
+  // sobrescrever função aberta anteriormente para evitar referência perdida
+  window.abrirModal = function(mode, nome){
+    modalMode = mode;
+    editingName = nome;
+    modal.style.display = "flex";
+    modalMes.value = currentMonth;
+    modalAno.value = currentYear;
+    modalNome.value = nome || "";
+    modalTitulo.textContent = mode === "create" ? "Cadastrar Escala" : `Editar Escala - ${nome}`;
+    gerarCamposDias();
+    if(mode === "edit" && nome){
+      const escalas = getEscalasMes(currentMonth,currentYear) || [];
+      const item = escalas.find(it => it.nome === nome);
+      if(item){
+        Array.from(modalDias.children).forEach((wrap, idx) => {
+          const sel = wrap.querySelector("select");
+          sel.value = item.dias[idx] || "";
+          if(item.dias[idx] === "VO"){
+            sel.disabled = true; // dia VO imutável
+          } else {
+            // remover opção VO em modo edição para impedir criação de VO
+            Array.from(sel.options).forEach(opt => { if(opt.value === "VO") opt.remove(); });
+            sel.disabled = false;
+          }
+        });
+      }
+    } else {
+      Array.from(modalDias.children).forEach(wrap => {
+        const sel = wrap.querySelector("select");
+        sel.disabled = false;
+        // se por ventura VO foi removido (do last edit), recriar opções completas
+        if(!Array.from(sel.options).some(o=>o.value==="VO")){
+          // reconstruir opções
+          sel.innerHTML = "<option value=''></option>";
+          tipos.forEach(tp => { const o = document.createElement("option"); o.value=tp; o.text=tp; sel.appendChild(o); });
+        }
+        sel.value = "";
+      });
+    }
+  };
+})();
+
 </script>
 </body>
 </html>
